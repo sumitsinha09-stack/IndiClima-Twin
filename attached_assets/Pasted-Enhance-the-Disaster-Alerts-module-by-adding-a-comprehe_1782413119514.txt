@@ -1,0 +1,105 @@
+Enhance the **Disaster Alerts** module by adding a comprehensive **Affected Areas** section for every predicted disaster.
+
+### New Feature: Affected Cities & Districts
+
+Whenever the AI predicts or displays a disaster (such as Flood, Cyclone, Heatwave, Drought, Landslide, Cloudburst, Forest Fire, Cold Wave, or Heavy Rainfall), the alert should include a dedicated **"Affected Areas"** section.
+
+### Information to Display
+
+For each disaster prediction, display:
+
+* **Disaster Type**
+* **Expected Date & Time**
+* **Severity Level** (Low, Moderate, High, Severe, Extreme)
+* **Prediction Confidence (%)**
+* **Current Status** (Monitoring, Watch, Warning, Critical)
+
+### Affected Areas Section
+
+Below the disaster details, display a searchable and responsive table containing:
+
+* **State**
+* **District Name**
+* **City/Town Name**
+* **Expected Impact Level** (Low, Moderate, High, Severe)
+* **Estimated Population at Risk**
+* **Expected Start Date & Time**
+* **Expected End Date & Time**
+* **Primary Risk** (Flooding, High Winds, Extreme Rainfall, Heat Stress, Water Scarcity, etc.)
+
+### Interactive Map Integration
+
+Integrate this information with the India map so that:
+
+* All affected states are highlighted.
+* Affected districts are color-coded based on severity.
+* Clicking on a district displays:
+
+  * District Name
+  * Major Cities/Towns Affected
+  * Disaster Type
+  * Severity
+  * Expected Timeline
+  * Estimated Population at Risk
+  * Safety Recommendations
+
+### UI Design
+
+* Display affected locations as modern cards or a responsive table.
+* Include icons representing the disaster type and severity.
+* Use color coding:
+
+  * 🟢 Low
+  * 🟡 Moderate
+  * 🟠 High
+  * 🔴 Severe
+  * 🟣 Extreme
+* Add sorting and filtering options by:
+
+  * State
+  * District
+  * Disaster Type
+  * Severity
+  * Expected Date
+
+### Search Functionality
+
+Include a search bar that allows users to quickly search by:
+
+* State
+* District
+* City
+* Disaster Type
+
+### Additional Insights
+
+For each affected city or district, also display:
+
+* Estimated rainfall (if applicable)
+* Expected temperature (if applicable)
+* Wind speed (for cyclones/storms)
+* Flood probability
+* Landslide probability (if applicable)
+* Infrastructure risk level
+* Crop impact level
+* Water resource impact
+* Suggested precautionary measures
+
+### Backend Requirements
+
+The backend should generate and return, for every disaster prediction:
+
+* List of affected states
+* List of affected districts
+* List of affected cities/towns
+* Severity for each location
+* Expected impact timeline
+* Population at risk
+* Relevant meteorological parameters
+* Safety recommendations
+
+The API response should be structured so the frontend can easily render both the disaster summary and the detailed list of affected locations.
+
+### Expected Outcome
+
+Each disaster alert should provide not only the **type of disaster** and its **expected occurrence date**, but also a detailed, easy-to-understand breakdown of **every state, district, and city likely to be affected**, along with impact severity, timeline, population at risk, and location-specific recommendations. This should help users and authorities quickly identify vulnerable areas and make informed preparedness decisions.

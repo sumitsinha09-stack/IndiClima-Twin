@@ -1,0 +1,728 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: ClimateTwin India API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: climate
+    description: Climate data and metrics
+  - name: alerts
+    description: Disaster alerts and warnings
+  - name: predictions
+    description: AI climate predictions
+  - name: scenarios
+    description: Digital twin scenario simulator
+  - name: agriculture
+    description: Agriculture dashboard data
+  - name: water
+    description: Water resource dashboard data
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /climate/current:
+    get:
+      operationId: getCurrentClimate
+      tags: [climate]
+      summary: Get current climate metrics across India
+      responses:
+        "200":
+          description: Current climate data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentClimate"
+
+  /climate/map-layers:
+    get:
+      operationId: getMapLayers
+      tags: [climate]
+      summary: Get climate map layer data for India regions
+      parameters:
+        - name: layer
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [rainfall, temperature, wind, humidity, flood_zones, aqi]
+      responses:
+        "200":
+          description: Map layer data points
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MapDataPoint"
+
+  /climate/trends:
+    get:
+      operationId: getClimateTrends
+      tags: [climate]
+      summary: Get 30-year climate trend data
+      parameters:
+        - name: metric
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [temperature, rainfall, humidity]
+      responses:
+        "200":
+          description: Climate trend series
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrendDataPoint"
+
+  /climate/summary:
+    get:
+      operationId: getClimateSummary
+      tags: [climate]
+      summary: Get dashboard summary statistics
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClimateSummary"
+
+  /alerts:
+    get:
+      operationId: getAlerts
+      tags: [alerts]
+      summary: Get active disaster alerts
+      responses:
+        "200":
+          description: Active alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DisasterAlert"
+
+  /alerts/detailed:
+    get:
+      operationId: getDetailedAlerts
+      tags: [alerts]
+      summary: Get all active alerts with full affected-area breakdown
+      responses:
+        "200":
+          description: Detailed alerts with per-district impact data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DetailedAlert"
+
+  /alerts/recent:
+    get:
+      operationId: getRecentAlerts
+      tags: [alerts]
+      summary: Get recent alert activity feed
+      responses:
+        "200":
+          description: Recent alert events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlertEvent"
+
+  /predictions/risks:
+    get:
+      operationId: getRiskPredictions
+      tags: [predictions]
+      summary: Get AI risk predictions for all hazards
+      responses:
+        "200":
+          description: Risk prediction scores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskPredictions"
+
+  /predictions/forecast:
+    get:
+      operationId: getWeatherForecast
+      tags: [predictions]
+      summary: Get 7-day weather forecast
+      responses:
+        "200":
+          description: Weather forecast
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ForecastDay"
+
+  /predictions/monsoon:
+    get:
+      operationId: getMonsoonStatus
+      tags: [predictions]
+      summary: Get monsoon status and onset prediction
+      responses:
+        "200":
+          description: Monsoon status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonsoonStatus"
+
+  /scenarios/simulate:
+    post:
+      operationId: runScenario
+      tags: [scenarios]
+      summary: Run a digital twin scenario simulation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScenarioInput"
+      responses:
+        "200":
+          description: Simulation results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScenarioResult"
+
+  /agriculture/dashboard:
+    get:
+      operationId: getAgricultureDashboard
+      tags: [agriculture]
+      summary: Get agriculture dashboard data
+      responses:
+        "200":
+          description: Agriculture data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgricultureData"
+
+  /water/dashboard:
+    get:
+      operationId: getWaterDashboard
+      tags: [water]
+      summary: Get water resource dashboard data
+      responses:
+        "200":
+          description: Water resource data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaterData"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    CurrentClimate:
+      type: object
+      required: [temperature, humidity, rainfall, windSpeed, airPressure, cloudCover, aqi, updatedAt]
+      properties:
+        temperature:
+          type: number
+          description: Average temperature in Celsius
+        humidity:
+          type: number
+          description: Relative humidity percentage
+        rainfall:
+          type: number
+          description: Rainfall in mm
+        windSpeed:
+          type: number
+          description: Wind speed in km/h
+        airPressure:
+          type: number
+          description: Air pressure in hPa
+        cloudCover:
+          type: number
+          description: Cloud cover percentage
+        aqi:
+          type: integer
+          description: Air Quality Index
+        cycloneActive:
+          type: boolean
+        monsoonPhase:
+          type: string
+          enum: [pre-monsoon, onset, active, withdrawal, post-monsoon]
+        reservoirLevel:
+          type: number
+          description: National average reservoir fill percentage
+        droughtIndex:
+          type: number
+          description: Standardized Precipitation Index
+        forestFireRisk:
+          type: string
+          enum: [low, moderate, high, very-high, extreme]
+        heatwaveRisk:
+          type: string
+          enum: [low, moderate, high, very-high, extreme]
+        floodProbability:
+          type: number
+          description: National flood probability 0-100
+        updatedAt:
+          type: string
+          format: date-time
+
+    MapDataPoint:
+      type: object
+      required: [lat, lng, value, district, state]
+      properties:
+        lat:
+          type: number
+        lng:
+          type: number
+        value:
+          type: number
+        district:
+          type: string
+        state:
+          type: string
+        label:
+          type: ["string", "null"]
+
+    TrendDataPoint:
+      type: object
+      required: [year, value, anomaly]
+      properties:
+        year:
+          type: integer
+        value:
+          type: number
+        anomaly:
+          type: number
+        movingAvg:
+          type: ["number", "null"]
+
+    ClimateSummary:
+      type: object
+      required: [avgTemp, totalRainfall, activeCyclones, activeAlerts, affectedDistricts, co2Level]
+      properties:
+        avgTemp:
+          type: number
+        totalRainfall:
+          type: number
+        activeCyclones:
+          type: integer
+        activeAlerts:
+          type: integer
+        affectedDistricts:
+          type: integer
+        co2Level:
+          type: number
+        tempAnomalyFromBaseline:
+          type: number
+        rainfallDeficit:
+          type: number
+
+    DisasterAlert:
+      type: object
+      required: [id, type, severity, title, affectedDistricts, probability, issuedAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [flood, cyclone, heatwave, drought, landslide, forest-fire]
+        severity:
+          type: string
+          enum: [watch, warning, severe, extreme]
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        affectedDistricts:
+          type: array
+          items:
+            type: string
+        probability:
+          type: number
+        expectedDate:
+          type: ["string", "null"]
+        recommendedActions:
+          type: array
+          items:
+            type: string
+        issuedAt:
+          type: string
+          format: date-time
+
+    AffectedArea:
+      type: object
+      required: [state, district, city, impactLevel, populationAtRisk, expectedStart, expectedEnd, primaryRisk, infrastructureRisk, cropImpact, waterResourceImpact, precautionaryMeasures]
+      properties:
+        state:
+          type: string
+        district:
+          type: string
+        city:
+          type: string
+        impactLevel:
+          type: string
+          enum: [low, moderate, high, severe, extreme]
+        populationAtRisk:
+          type: integer
+        expectedStart:
+          type: string
+          format: date-time
+        expectedEnd:
+          type: string
+          format: date-time
+        primaryRisk:
+          type: string
+        estimatedRainfall:
+          type: ["number", "null"]
+        expectedTemperature:
+          type: ["number", "null"]
+        windSpeed:
+          type: ["number", "null"]
+        floodProbability:
+          type: ["number", "null"]
+        landslideProbability:
+          type: ["number", "null"]
+        infrastructureRisk:
+          type: string
+          enum: [low, moderate, high, critical]
+        cropImpact:
+          type: string
+          enum: [none, low, moderate, high, severe]
+        waterResourceImpact:
+          type: string
+          enum: [none, low, moderate, high, severe]
+        precautionaryMeasures:
+          type: array
+          items:
+            type: string
+
+    DetailedAlert:
+      type: object
+      required: [id, type, severity, title, affectedDistricts, probability, confidence, status, issuedAt, affectedAreas, recommendedActions]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [flood, cyclone, heatwave, drought, landslide, forest-fire]
+        severity:
+          type: string
+          enum: [watch, warning, severe, extreme]
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        affectedDistricts:
+          type: array
+          items:
+            type: string
+        probability:
+          type: number
+        confidence:
+          type: number
+        status:
+          type: string
+          enum: [monitoring, watch, warning, critical]
+        expectedDate:
+          type: ["string", "null"]
+        recommendedActions:
+          type: array
+          items:
+            type: string
+        issuedAt:
+          type: string
+          format: date-time
+        affectedAreas:
+          type: array
+          items:
+            $ref: "#/components/schemas/AffectedArea"
+
+    AlertEvent:
+      type: object
+      required: [id, type, message, region, severity, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        message:
+          type: string
+        region:
+          type: string
+        severity:
+          type: string
+          enum: [info, warning, critical]
+        timestamp:
+          type: string
+          format: date-time
+
+    RiskPredictions:
+      type: object
+      required: [flood, cyclone, heatwave, drought, landslide, forestFire]
+      properties:
+        flood:
+          $ref: "#/components/schemas/RiskScore"
+        cyclone:
+          $ref: "#/components/schemas/RiskScore"
+        heatwave:
+          $ref: "#/components/schemas/RiskScore"
+        drought:
+          $ref: "#/components/schemas/RiskScore"
+        landslide:
+          $ref: "#/components/schemas/RiskScore"
+        forestFire:
+          $ref: "#/components/schemas/RiskScore"
+
+    RiskScore:
+      type: object
+      required: [score, confidence, trend, topRegions]
+      properties:
+        score:
+          type: number
+          description: Risk score 0-100
+        confidence:
+          type: number
+          description: Model confidence 0-100
+        trend:
+          type: string
+          enum: [increasing, stable, decreasing]
+        topRegions:
+          type: array
+          items:
+            type: string
+
+    ForecastDay:
+      type: object
+      required: [date, maxTemp, minTemp, rainfall, windSpeed, humidity, condition]
+      properties:
+        date:
+          type: string
+          format: date
+        maxTemp:
+          type: number
+        minTemp:
+          type: number
+        rainfall:
+          type: number
+        windSpeed:
+          type: number
+        humidity:
+          type: number
+        condition:
+          type: string
+          enum: [sunny, partly-cloudy, cloudy, rainy, thunderstorm, foggy]
+
+    MonsoonStatus:
+      type: object
+      required: [phase, onsetDate, currentCoverage, rainfallDeficit, progressionPercent]
+      properties:
+        phase:
+          type: string
+          enum: [pre-monsoon, onset, active, withdrawal, post-monsoon]
+        onsetDate:
+          type: ["string", "null"]
+          format: date
+        predictedOnsetDate:
+          type: ["string", "null"]
+          format: date
+        currentCoverage:
+          type: number
+          description: Percentage of India covered by monsoon
+        rainfallDeficit:
+          type: number
+          description: Deficit percentage vs normal
+        progressionPercent:
+          type: number
+
+    ScenarioInput:
+      type: object
+      properties:
+        temperatureChange:
+          type: number
+          description: Temperature change in Celsius (-5 to +5)
+        rainfallChange:
+          type: number
+          description: Rainfall change percentage (-50 to +50)
+        deforestationPercent:
+          type: number
+          description: Deforestation percentage (0-50)
+        urbanExpansionPercent:
+          type: number
+          description: Urban expansion percentage (0-30)
+        seaLevelRise:
+          type: number
+          description: Sea level rise in meters (0-2)
+        carbonEmissionsChange:
+          type: number
+          description: Carbon emissions change percentage (-30 to +50)
+
+    ScenarioResult:
+      type: object
+      required: [floodRisk, droughtRisk, heatwaveRisk, agricultureImpact, waterAvailability, affectedPopulation, co2Concentration, surfaceTemp]
+      properties:
+        floodRisk:
+          type: number
+        droughtRisk:
+          type: number
+        heatwaveRisk:
+          type: number
+        agricultureImpact:
+          type: number
+          description: Impact score -100 to 100
+        waterAvailability:
+          type: number
+          description: Change in water availability percentage
+        affectedPopulation:
+          type: integer
+          description: Estimated affected population in millions
+        co2Concentration:
+          type: number
+        surfaceTemp:
+          type: number
+
+    AgricultureData:
+      type: object
+      required: [soilMoisture, cropStressIndex, rainfallOutlook, suitableCrops, yieldPredictions]
+      properties:
+        soilMoisture:
+          type: number
+        cropStressIndex:
+          type: number
+        rainfallOutlook:
+          type: string
+          enum: [deficient, normal, excess]
+        sowingAdvisory:
+          type: ["string", "null"]
+        suitableCrops:
+          type: array
+          items:
+            $ref: "#/components/schemas/CropRecommendation"
+        yieldPredictions:
+          type: array
+          items:
+            $ref: "#/components/schemas/YieldPrediction"
+
+    CropRecommendation:
+      type: object
+      required: [crop, suitability, season]
+      properties:
+        crop:
+          type: string
+        suitability:
+          type: number
+          description: Suitability score 0-100
+        season:
+          type: string
+
+    YieldPrediction:
+      type: object
+      required: [crop, predictedYield, unit, changeFromLastYear]
+      properties:
+        crop:
+          type: string
+        predictedYield:
+          type: number
+        unit:
+          type: string
+        changeFromLastYear:
+          type: number
+
+    WaterData:
+      type: object
+      required: [reservoirs, rivers, groundwater]
+      properties:
+        reservoirs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReservoirStatus"
+        rivers:
+          type: array
+          items:
+            $ref: "#/components/schemas/RiverStatus"
+        groundwater:
+          $ref: "#/components/schemas/GroundwaterStatus"
+        waterStressIndex:
+          type: number
+        demandEstimate:
+          type: number
+          description: Water demand in billion cubic meters
+
+    ReservoirStatus:
+      type: object
+      required: [name, state, currentLevel, capacity, fillPercent]
+      properties:
+        name:
+          type: string
+        state:
+          type: string
+        currentLevel:
+          type: number
+          description: Current storage in billion cubic meters
+        capacity:
+          type: number
+        fillPercent:
+          type: number
+        inflow:
+          type: number
+        outflow:
+          type: number
+
+    RiverStatus:
+      type: object
+      required: [name, currentLevel, dangerLevel, status]
+      properties:
+        name:
+          type: string
+        currentLevel:
+          type: number
+          description: River level in meters
+        dangerLevel:
+          type: number
+        status:
+          type: string
+          enum: [normal, above-normal, warning, danger, extreme-danger]
+
+    GroundwaterStatus:
+      type: object
+      required: [nationalAverage, depleting, stable, recharging]
+      properties:
+        nationalAverage:
+          type: number
+          description: Average groundwater level in meters below ground
+        depleting:
+          type: integer
+          description: Number of districts with depleting groundwater
+        stable:
+          type: integer
+        recharging:
+          type: integer

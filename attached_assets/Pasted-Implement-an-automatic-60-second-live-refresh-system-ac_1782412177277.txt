@@ -1,0 +1,108 @@
+Implement an **automatic 60-second live refresh system** across the entire dashboard.
+
+### Live Refresh Requirements
+
+Create a **60-second countdown timer** that is always visible at the top-right corner of the dashboard (next to the user profile or notifications). The timer should count down from **60 → 0** in real time.
+
+When the timer reaches **0**:
+
+* Automatically refresh **all dashboard data** without requiring any user interaction.
+* Fetch the latest data from every connected API and database.
+* Update all widgets, charts, maps, tables, KPIs, AI predictions, weather layers, and live alerts.
+* Reset the timer back to **60 seconds** and continue the cycle indefinitely.
+
+### Components to Refresh
+
+Every 60 seconds, automatically refresh:
+
+* Live Weather Data
+* Temperature
+* Rainfall
+* Humidity
+* Wind Speed
+* Air Pressure
+* AQI
+* Heat Index
+* Soil Moisture
+* Reservoir Levels
+* River Flow Data
+* Flood Risk
+* Cyclone Risk
+* Drought Index
+* Heatwave Alerts
+* Fire Alerts
+* Agricultural Insights
+* Water Resource Dashboard
+* Climate Predictions
+* AI Model Outputs
+* Interactive India Map Layers
+* 3D Digital Twin Visualization
+* Disaster Alerts
+* Satellite Layers
+* Charts and Analytics
+* Notification Feed
+* Any other live API-driven component
+
+### Refresh Behavior
+
+* Use a **single centralized refresh manager** so all components update simultaneously.
+* Refresh data **asynchronously** to prevent UI freezing.
+* Only reload the data—**do not reload the entire webpage**.
+* Preserve the user's current page, filters, selected state, map zoom, open panels, and scroll position.
+* Show a small loading indicator or shimmer animation only on the components currently updating.
+* If an API request fails, keep displaying the last successful data and show a subtle warning instead of breaking the UI.
+* Retry failed API requests automatically using exponential backoff.
+
+### Timer UI
+
+The timer should display:
+
+**Next Auto Refresh**
+`00:60`
+
+It should count down every second:
+
+`00:59`
+`00:58`
+...
+`00:01`
+`Refreshing...`
+
+Then restart at:
+
+`01:00`
+
+Include a circular progress ring around the timer that gradually decreases as the countdown progresses.
+
+### Manual Refresh
+
+Add a **Refresh Now** button beside the timer.
+
+When clicked:
+
+* Immediately refresh all APIs and database queries.
+* Reset the countdown back to **60 seconds** after the refresh completes.
+
+### Performance Requirements
+
+* Use efficient polling (every 60 seconds).
+* Prevent duplicate API requests if one is already in progress.
+* Batch API calls where possible.
+* Cache unchanged data to minimize bandwidth.
+* Update only components whose data has changed.
+* Ensure smooth animations with no flickering.
+
+### Backend Integration
+
+Configure the backend so that every 60 seconds it:
+
+* Fetches the latest data from all integrated APIs.
+* Updates cached datasets.
+* Recalculates AI predictions if new data is available.
+* Returns only the latest data to the frontend.
+
+The frontend countdown timer and backend refresh cycle should always remain synchronized.
+
+### Expected Result
+
+The dashboard should function like a **real-time climate intelligence platform**, where all live data is automatically refreshed every **60 seconds**, the countdown visibly indicates the next update, users can manually trigger a refresh at any time, and the experience remains smooth, responsive, and uninterrupted.

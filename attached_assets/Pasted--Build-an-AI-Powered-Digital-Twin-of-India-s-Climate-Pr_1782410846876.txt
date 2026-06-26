@@ -1,0 +1,620 @@
+# Build an AI-Powered Digital Twin of India's Climate
+
+## Project Overview
+
+Build a full-stack AI-powered web application called **ClimateTwin India**.
+
+The platform should create a Digital Twin of India's climate using national climate datasets. The system should simulate weather and climate patterns, predict future scenarios using AI models, visualize the data on interactive maps, and provide decision-support tools for policymakers, researchers, farmers, and disaster management authorities.
+
+The UI should look modern and futuristic (similar to NASA, Windy, Google Earth Engine, and IBM Weather dashboards).
+
+---
+
+# Tech Stack
+
+Frontend
+
+* React
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Framer Motion
+* Mapbox GL JS or Leaflet
+* Recharts / Chart.js
+
+Backend
+
+* Python FastAPI
+* PostgreSQL
+* Redis
+* Celery
+
+AI & ML
+
+* PyTorch
+* TensorFlow
+* Scikit-Learn
+* XGBoost
+* LSTM
+* Transformer Time Series Model
+* Prophet
+
+Geospatial
+
+* Rasterio
+* GeoPandas
+* xarray
+* NetCDF4
+* GDAL
+* Shapely
+
+Cloud Ready
+
+* Docker
+* Docker Compose
+
+---
+
+# Theme
+
+Dark futuristic interface
+
+Primary Colors
+
+Blue
+Green
+White
+
+Glassmorphism cards
+
+Animated gradients
+
+3D Earth visualization
+
+Interactive maps
+
+---
+
+# Landing Page
+
+Create a beautiful homepage containing
+
+Hero Section
+
+Large animated globe of India
+
+Headline
+
+"ClimateTwin India"
+
+Subheading
+
+AI-powered Digital Twin of India's Climate
+
+Buttons
+
+Launch Dashboard
+
+View Live Climate
+
+Background animation of moving weather particles.
+
+---
+
+# Dashboard
+
+Create a sidebar with
+
+Dashboard
+
+Climate Twin
+
+Satellite Data
+
+Weather Forecast
+
+AI Predictions
+
+Disaster Alerts
+
+Agriculture
+
+Water Resources
+
+Climate Analytics
+
+Scenario Simulator
+
+Settings
+
+---
+
+# Dashboard Widgets
+
+Current Temperature
+
+Humidity
+
+Rainfall
+
+Wind Speed
+
+Air Pressure
+
+Cloud Cover
+
+Cyclone Tracker
+
+Monsoon Status
+
+AQI
+
+Reservoir Levels
+
+River Flow
+
+Drought Index
+
+Forest Fire Risk
+
+Heatwave Risk
+
+Flood Probability
+
+Each widget should contain
+
+Beautiful charts
+
+Icons
+
+Animated values
+
+Mini graphs
+
+---
+
+# Interactive India Map
+
+Build an interactive GIS map.
+
+Layers
+
+Rainfall
+
+Temperature
+
+Wind
+
+Humidity
+
+Cloud Cover
+
+Cyclones
+
+Flood Zones
+
+River Network
+
+Groundwater
+
+Land Surface Temperature
+
+Vegetation Index
+
+Population Density
+
+Urban Heat Islands
+
+Users should be able to zoom, filter, and animate timelines.
+
+---
+
+# AI Climate Twin
+
+Create an AI model page.
+
+The AI model should
+
+Predict rainfall
+
+Predict floods
+
+Predict droughts
+
+Predict cyclone intensity
+
+Predict heatwaves
+
+Predict monsoon onset
+
+Predict water availability
+
+Predict agricultural productivity
+
+Display
+
+Prediction confidence
+
+Risk score
+
+Feature importance
+
+Historical comparison
+
+---
+
+# Digital Twin Simulator
+
+Allow users to simulate
+
+Temperature increase
+
+Rainfall decrease
+
+Deforestation
+
+Urban expansion
+
+Reservoir construction
+
+Dam failure
+
+Sea level rise
+
+Population increase
+
+Carbon emissions
+
+When sliders change
+
+Immediately update
+
+Map
+
+Charts
+
+Predictions
+
+Risk scores
+
+---
+
+# Climate Analytics
+
+Provide
+
+30-year trends
+
+Seasonal averages
+
+Temperature anomalies
+
+Rainfall anomalies
+
+Climate change projections
+
+Interactive charts
+
+Heatmaps
+
+Box plots
+
+Scatter plots
+
+Time series
+
+---
+
+# Disaster Prediction Module
+
+AI should predict
+
+Flood Risk
+
+Cyclone Risk
+
+Heatwave Risk
+
+Landslide Risk
+
+Forest Fire Risk
+
+Drought Risk
+
+Each prediction should show
+
+Severity
+
+Affected districts
+
+Probability
+
+Expected date
+
+Recommended actions
+
+---
+
+# Agriculture Dashboard
+
+Crop recommendation
+
+Sowing advisory
+
+Rainfall outlook
+
+Soil moisture
+
+Crop stress detection
+
+Yield prediction
+
+Suitable crops based on predicted weather
+
+---
+
+# Water Resource Dashboard
+
+Reservoir monitoring
+
+River levels
+
+Groundwater prediction
+
+Water demand estimation
+
+Water stress index
+
+---
+
+# Data Sources Section
+
+Create connectors for
+
+IMD Weather API
+
+INSAT Satellite
+
+Oceansat
+
+MOSDAC
+
+ISRO Bhuvan
+
+CWC
+
+CPCB
+
+NDMA
+
+NRSC
+
+OpenWeather API
+
+NASA POWER API
+
+ERA5
+
+NetCDF datasets
+
+The architecture should allow plugging in real APIs later.
+
+---
+
+# AI Models
+
+Implement placeholders for
+
+LSTM
+
+Transformer
+
+Random Forest
+
+XGBoost
+
+CNN
+
+Graph Neural Networks
+
+Each model should have
+
+Training page
+
+Evaluation page
+
+Accuracy
+
+Precision
+
+Recall
+
+RMSE
+
+MAE
+
+Model download
+
+---
+
+# Explainable AI
+
+Show
+
+SHAP values
+
+Feature importance
+
+Attention maps
+
+Prediction explanations
+
+Confidence intervals
+
+---
+
+# Scenario Generator
+
+Users can create scenarios such as
+
+What if rainfall decreases by 20%?
+
+What if temperature rises by 2°C?
+
+What if forest cover decreases by 30%?
+
+The Digital Twin should simulate impacts.
+
+---
+
+# Notifications
+
+Real-time alerts
+
+Flood warning
+
+Cyclone warning
+
+Heatwave warning
+
+Heavy rainfall warning
+
+Push notifications
+
+Email integration
+
+---
+
+# Admin Panel
+
+Manage datasets
+
+Retrain AI models
+
+Upload NetCDF files
+
+Manage users
+
+System logs
+
+API configuration
+
+---
+
+# Authentication
+
+Google Login
+
+Email Login
+
+JWT Authentication
+
+Role-based access
+
+Admin
+
+Researcher
+
+Government
+
+Citizen
+
+---
+
+# Database
+
+Store
+
+Climate observations
+
+Satellite images
+
+Predictions
+
+Alerts
+
+Historical weather
+
+Simulation results
+
+Users
+
+AI model metadata
+
+---
+
+# Folder Structure
+
+frontend/
+
+backend/
+
+models/
+
+datasets/
+
+scripts/
+
+api/
+
+database/
+
+docker/
+
+docs/
+
+---
+
+# Nice Animations
+
+Animated weather radar
+
+Moving clouds
+
+Rain animation
+
+Cyclone animation
+
+Earth rotation
+
+Loading skeletons
+
+Gradient cards
+
+Smooth page transitions
+
+---
+
+# Dummy Data
+
+Until APIs are connected, generate realistic synthetic climate data for every module.
+
+---
+
+# Code Requirements
+
+Write clean production-ready code.
+
+Use reusable React components.
+
+Use TypeScript everywhere.
+
+Proper folder structure.
+
+Responsive UI.
+
+Dark mode.
+
+Comments in code.
+
+API-ready architecture.
+
+Error handling.
+
+Loading states.
+
+Reusable services.
+
+Scalable architecture.
+
+The project should run immediately in Replit with minimal setup and should be designed so real IMD, ISRO, and other national datasets can replace the dummy data later without major code changes.
