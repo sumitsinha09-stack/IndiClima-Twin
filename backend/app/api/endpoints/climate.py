@@ -156,7 +156,7 @@ async def get_climate_summary(db: AsyncSession = Depends(get_db)):
         rainfallDeficit=jitter(s.rainfall_deficit, 0.03)
     )
 
-def call_gemini_api(prompt: str) -> Optional[str]:
+def call_gemini_api(prompt: str, context: str = "") -> Optional[str]:
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         return None
@@ -168,7 +168,9 @@ def call_gemini_api(prompt: str) -> Optional[str]:
         "Your role is to answer questions about the ClimateTwin platform (the simulator, clean energy hub, Krishi AI chatbot, and emergency shelter routing) "
         "as well as general climate science, microclimates in India, meteorological terms, crop suitability, and green energy. "
         "Keep responses professional, concise (1-3 paragraphs), and format key parameters or instructions in markdown. "
-        "If asked about platform capabilities, relate it to the 6 modules: Dashboard, Agriculture, Water, Energy, Analytics, and Simulator."
+        "If asked about platform capabilities, relate it to the 6 modules: Dashboard, Agriculture, Water, Energy, Analytics, and Simulator.\n\n"
+        "Here is the current live telemetry data from the Digital Twin database that you can use to answer current state/weather questions:\n"
+        f"{context}"
     )
     
     payload = {
@@ -207,9 +209,52 @@ def call_gemini_api(prompt: str) -> Optional[str]:
         return None
 
 @router.post("/climate/chat", response_model=ChatResponse)
-async def chat_climate(payload: ChatMessage):
-    # Try calling the generative AI model
-    gemini_reply = call_gemini_api(payload.message)
+async def chat_climate(payload: ChatMessage, db: AsyncSession = Depends(get_db)):
+    # Fetch live telemetry from the database to inject as context
+    context = ""
+    try:
+        snap_res = await db.execute(
+            select(ClimateSnapshot).order_by(desc(ClimateSnapshot.recorded_at)).limit(1)
+        )
+        snap = snap_res.scalars().first()
+        if snap:
+            context += (
+                "--- CURRENT TELEMETRY SNAPSHOT ---\n"
+                f"Temperature: {snap.temperature}°C\n"
+                f"Humidity: {snap.humidity}%\n"
+                f"Rainfall: {snap.rainfall} mm\n"
+                f"Wind Speed: {snap.wind_speed} km/h\n"
+                f"Air Pressure: {snap.air_pressure} hPa\n"
+                f"Air Quality Index (AQI): {snap.aqi}\n"
+                f"Monsoon Phase: {snap.monsoon_phase}\n"
+                f"Reservoir Level: {snap.reservoir_level}%\n"
+                f"Drought Severity Index: {snap.drought_index}/10\n"
+                f"Active Cyclone Alert: {'Yes' if snap.cyclone_active == 'true' else 'No'}\n"
+                f"Forest Fire Risk: {snap.forest_fire_risk}/100\n"
+                f"Heatwave Risk: {snap.heatwave_risk}/100\n"
+                f"Flood Probability: {snap.flood_probability}%\n\n"
+            )
+            
+        sum_res = await db.execute(
+            select(ClimateSummary).order_by(desc(ClimateSummary.updated_at)).limit(1)
+        )
+        summary = sum_res.scalars().first()
+        if summary:
+            context += (
+                "--- COMMAND CENTER SUMMARY ---\n"
+                f"National Avg Temperature: {summary.avg_temp}°C\n"
+                f"Seasonal Total Rainfall: {summary.total_rainfall} mm\n"
+                f"Active Weather Alerts Count: {summary.active_alerts}\n"
+                f"Affected Districts: {summary.affected_districts}\n"
+                f"CO2 Concentration: {summary.co2_level} ppm\n"
+                f"Temperature Anomaly from Baseline: +{summary.temp_anomaly_from_baseline}°C\n"
+                f"Monsoon Deficit/Excess: {summary.rainfall_deficit}%\n\n"
+            )
+    except Exception as e:
+        print(f"Error fetching context for chat: {e}")
+
+    # Try calling the generative AI model with loaded telemetry context
+    gemini_reply = call_gemini_api(payload.message, context)
     if gemini_reply:
         return ChatResponse(reply=gemini_reply)
         
