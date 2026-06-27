@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './activeShelter';
+export * from './activeShelterStatus';
 export * from './affectedArea';
 export * from './affectedAreaCropImpact';
 export * from './affectedAreaImpactLevel';
@@ -15,6 +17,8 @@ export * from './agricultureData';
 export * from './agricultureDataRainfallOutlook';
 export * from './alertEvent';
 export * from './alertEventSeverity';
+export * from './chatMessage';
+export * from './chatResponse';
 export * from './climateSummary';
 export * from './cropRecommendation';
 export * from './currentClimate';
@@ -28,6 +32,10 @@ export * from './detailedAlertType';
 export * from './disasterAlert';
 export * from './disasterAlertSeverity';
 export * from './disasterAlertType';
+export * from './downloadReportParams';
+export * from './energyPotentialData';
+export * from './evacuationRoute';
+export * from './evacuationRouteStatus';
 export * from './forecastDay';
 export * from './forecastDayCondition';
 export * from './getClimateTrendsMetric';
@@ -47,6 +55,8 @@ export * from './riverStatus';
 export * from './riverStatusStatus';
 export * from './scenarioInput';
 export * from './scenarioResult';
+export * from './stateEnergyPotential';
+export * from './stateEnergyPotentialStatus';
 export * from './trendDataPoint';
 export * from './waterData';
 export * from './yieldPrediction';

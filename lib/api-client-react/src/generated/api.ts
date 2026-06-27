@@ -22,10 +22,14 @@ import type {
 import type {
   AgricultureData,
   AlertEvent,
+  ChatMessage,
+  ChatResponse,
   ClimateSummary,
   CurrentClimate,
   DetailedAlert,
   DisasterAlert,
+  DownloadReportParams,
+  EnergyPotentialData,
   ForecastDay,
   GetClimateTrendsParams,
   GetMapLayersParams,
@@ -1140,6 +1144,237 @@ export function useGetWaterDashboard<TData = Awaited<ReturnType<typeof getWaterD
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetWaterDashboardQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getChatAgricultureUrl = () => {
+
+
+
+
+  return `/api/agriculture/chat`
+}
+
+/**
+ * @summary Ask Krishi AI an advisory question
+ */
+export const chatAgriculture = async (chatMessage: ChatMessage, options?: RequestInit): Promise<ChatResponse> => {
+
+  return customFetch<ChatResponse>(getChatAgricultureUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(chatMessage)
+  }
+);}
+
+
+
+
+export const getChatAgricultureMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatAgriculture>>, TError,{data: BodyType<ChatMessage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof chatAgriculture>>, TError,{data: BodyType<ChatMessage>}, TContext> => {
+
+const mutationKey = ['chatAgriculture'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof chatAgriculture>>, {data: BodyType<ChatMessage>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  chatAgriculture(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChatAgricultureMutationResult = NonNullable<Awaited<ReturnType<typeof chatAgriculture>>>
+    export type ChatAgricultureMutationBody = BodyType<ChatMessage>
+    export type ChatAgricultureMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Ask Krishi AI an advisory question
+ */
+export const useChatAgriculture = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatAgriculture>>, TError,{data: BodyType<ChatMessage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof chatAgriculture>>,
+        TError,
+        {data: BodyType<ChatMessage>},
+        TContext
+      > => {
+      return useMutation(getChatAgricultureMutationOptions(options));
+    }
+
+export const getGetEnergyDashboardUrl = () => {
+
+
+
+
+  return `/api/energy/dashboard`
+}
+
+/**
+ * @summary Get renewable energy potential dashboard data
+ */
+export const getEnergyDashboard = async ( options?: RequestInit): Promise<EnergyPotentialData> => {
+
+  return customFetch<EnergyPotentialData>(getGetEnergyDashboardUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetEnergyDashboardQueryKey = () => {
+    return [
+    `/api/energy/dashboard`
+    ] as const;
+    }
+
+
+export const getGetEnergyDashboardQueryOptions = <TData = Awaited<ReturnType<typeof getEnergyDashboard>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetEnergyDashboardQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEnergyDashboard>>> = ({ signal }) => getEnergyDashboard({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEnergyDashboard>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetEnergyDashboardQueryResult = NonNullable<Awaited<ReturnType<typeof getEnergyDashboard>>>
+export type GetEnergyDashboardQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get renewable energy potential dashboard data
+ */
+
+export function useGetEnergyDashboard<TData = Awaited<ReturnType<typeof getEnergyDashboard>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getEnergyDashboard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetEnergyDashboardQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDownloadReportUrl = (params?: DownloadReportParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reports/download?${stringifiedParams}` : `/api/reports/download`
+}
+
+/**
+ * @summary Download PDF summary report
+ */
+export const downloadReport = async (params?: DownloadReportParams, options?: RequestInit): Promise<Blob> => {
+
+  return customFetch<Blob>(getDownloadReportUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getDownloadReportQueryKey = (params?: DownloadReportParams,) => {
+    return [
+    `/api/reports/download`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getDownloadReportQueryOptions = <TData = Awaited<ReturnType<typeof downloadReport>>, TError = ErrorType<unknown>>(params?: DownloadReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getDownloadReportQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof downloadReport>>> = ({ signal }) => downloadReport(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof downloadReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type DownloadReportQueryResult = NonNullable<Awaited<ReturnType<typeof downloadReport>>>
+export type DownloadReportQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Download PDF summary report
+ */
+
+export function useDownloadReport<TData = Awaited<ReturnType<typeof downloadReport>>, TError = ErrorType<unknown>>(
+ params?: DownloadReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getDownloadReportQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -23,9 +23,14 @@ import {
   LineChart,
   SlidersHorizontal,
   Settings,
+  Zap,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useRefreshManager } from "@/hooks/use-refresh-manager";
 import { RefreshTimer } from "@/components/refresh-timer";
+import { useTheme } from "@/components/theme-provider";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -34,6 +39,7 @@ const navItems = [
   { title: "Disaster Alerts", url: "/disasters", icon: AlertTriangle },
   { title: "Agriculture", url: "/agriculture", icon: Sprout },
   { title: "Water Resources", url: "/water", icon: Droplets },
+  { title: "Renewable Energy", url: "/energy", icon: Zap },
   { title: "Climate Analytics", url: "/analytics", icon: LineChart },
   { title: "Scenario Simulator", url: "/simulator", icon: SlidersHorizontal },
   { title: "Settings", url: "/settings", icon: Settings },
@@ -42,6 +48,7 @@ const navItems = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const refreshState = useRefreshManager();
+  const { theme, setTheme } = useTheme();
 
   return (
     <SidebarProvider>
@@ -100,8 +107,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             <div className="flex-1" />
 
-            {/* Refresh timer — always visible in top-right */}
-            <RefreshTimer {...refreshState} />
+            {/* Refresh timer & Theme Toggle */}
+            <div className="flex items-center gap-3">
+              <RefreshTimer {...refreshState} />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="w-9 h-9 border border-border/40 text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-[1.1rem] w-[1.1rem] text-amber-400" />
+                ) : (
+                  <Moon className="h-[1.1rem] w-[1.1rem] text-primary" />
+                )}
+              </Button>
+            </div>
           </header>
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 scroll-smooth">

@@ -21,6 +21,10 @@ tags:
     description: Agriculture dashboard data
   - name: water
     description: Water resource dashboard data
+  - name: energy
+    description: Renewable energy dashboard data
+  - name: reports
+    description: Report generation and download
 paths:
   /healthz:
     get:
@@ -237,6 +241,83 @@ paths:
               schema:
                 $ref: "#/components/schemas/WaterData"
 
+  /agriculture/chat:
+    post:
+      operationId: chatAgriculture
+      tags: [agriculture]
+      summary: Ask Krishi AI an advisory question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessage"
+      responses:
+        "200":
+          description: Chat reply
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
+  /energy/dashboard:
+    get:
+      operationId: getEnergyDashboard
+      tags: [energy]
+      summary: Get renewable energy potential dashboard data
+      responses:
+        "200":
+          description: Renewable energy data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnergyPotentialData"
+
+  /reports/download:
+    get:
+      operationId: downloadReport
+      tags: [reports]
+      summary: Download PDF summary report
+      parameters:
+        - name: temperatureChange
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: rainfallChange
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: deforestationPercent
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: urbanExpansionPercent
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: seaLevelRise
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: carbonEmissionsChange
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: PDF report file download
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
 components:
   schemas:
     HealthStatus:
@@ -381,7 +462,7 @@ components:
 
     AffectedArea:
       type: object
-      required: [state, district, city, impactLevel, populationAtRisk, expectedStart, expectedEnd, primaryRisk, infrastructureRisk, cropImpact, waterResourceImpact, precautionaryMeasures]
+      required: [state, district, city, impactLevel, populationAtRisk, expectedStart, expectedEnd, primaryRisk, infrastructureRisk, cropImpact, waterResourceImpact, precautionaryMeasures, activeShelters, evacuationRoutes]
       properties:
         state:
           type: string
@@ -425,6 +506,14 @@ components:
           type: array
           items:
             type: string
+        activeShelters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActiveShelter"
+        evacuationRoutes:
+          type: array
+          items:
+            $ref: "#/components/schemas/EvacuationRoute"
 
     DetailedAlert:
       type: object
@@ -585,10 +674,16 @@ components:
         carbonEmissionsChange:
           type: number
           description: Carbon emissions change percentage (-30 to +50)
+        urbanGreenCoverPercent:
+          type: number
+          description: Urban green cover percentage (0-100)
+        albedoIndex:
+          type: number
+          description: Urban albedo reflectivity index (0-1)
 
     ScenarioResult:
       type: object
-      required: [floodRisk, droughtRisk, heatwaveRisk, agricultureImpact, waterAvailability, affectedPopulation, co2Concentration, surfaceTemp]
+      required: [floodRisk, droughtRisk, heatwaveRisk, agricultureImpact, waterAvailability, affectedPopulation, co2Concentration, surfaceTemp, uhiIndex]
       properties:
         floodRisk:
           type: number
@@ -608,6 +703,8 @@ components:
         co2Concentration:
           type: number
         surfaceTemp:
+          type: number
+        uhiIndex:
           type: number
 
     AgricultureData:
@@ -726,3 +823,82 @@ components:
           type: integer
         recharging:
           type: integer
+
+    ActiveShelter:
+      type: object
+      required: [name, capacity, occupied, status]
+      properties:
+        name:
+          type: string
+        capacity:
+          type: integer
+        occupied:
+          type: integer
+        status:
+          type: string
+          enum: [active, full, standby]
+
+    EvacuationRoute:
+      type: object
+      required: [highway, status, alternativeRoute]
+      properties:
+        highway:
+          type: string
+        status:
+          type: string
+          enum: [open, warning, inundated, blocked]
+        alternativeRoute:
+          type: ["string", "null"]
+
+    EnergyPotentialData:
+      type: object
+      required: [totalSolarPotentialMw, totalWindPotentialMw, totalHydroPotentialMw, averageSolarIrradiance, averageWindSpeed, states]
+      properties:
+        totalSolarPotentialMw:
+          type: number
+        totalWindPotentialMw:
+          type: number
+        totalHydroPotentialMw:
+          type: number
+        averageSolarIrradiance:
+          type: number
+        averageWindSpeed:
+          type: number
+        states:
+          type: array
+          items:
+            $ref: "#/components/schemas/StateEnergyPotential"
+
+    StateEnergyPotential:
+      type: object
+      required: [stateName, solarIrradiance, windSpeed, hydroPotential, solarCapacityMw, windCapacityMw, status]
+      properties:
+        stateName:
+          type: string
+        solarIrradiance:
+          type: number
+        windSpeed:
+          type: number
+        hydroPotential:
+          type: number
+        solarCapacityMw:
+          type: number
+        windCapacityMw:
+          type: number
+        status:
+          type: string
+          enum: [optimal, high, moderate, low]
+
+    ChatMessage:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+    ChatResponse:
+      type: object
+      required: [reply]
+      properties:
+        reply:
+          type: string

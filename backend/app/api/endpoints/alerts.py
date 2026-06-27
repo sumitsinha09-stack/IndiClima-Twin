@@ -334,10 +334,52 @@ def build_affected_areas(type_str: str, issued_at: datetime) -> List[Dict[str, A
     for a in areas:
         start = issued_at + timedelta(hours=3)
         end = start + timedelta(hours=a["durationHours"])
+        
+        district = a.get("district", "District")
+        if type_str == "flood":
+            shelters = [
+                {"name": f"{district} Government College Camp", "capacity": 1200, "occupied": 980, "status": "active"},
+                {"name": f"{district} Sports Stadium Shelter", "capacity": 800, "occupied": 800, "status": "full"},
+                {"name": "Miri Village Uplands Safe Zone", "capacity": 400, "occupied": 150, "status": "active"}
+            ]
+            routes = [
+                {"highway": "National Highway 15", "status": "blocked", "alternativeRoute": "State Highway 4 Bypass"},
+                {"highway": "Riverbank Embankment Road", "status": "inundated", "alternativeRoute": "Panchayat Village Path"},
+                {"highway": "District Link Highway", "status": "open", "alternativeRoute": None}
+            ]
+        elif type_str == "cyclone":
+            shelters = [
+                {"name": f"{district} Cyclone Shelter #1", "capacity": 1500, "occupied": 1420, "status": "active"},
+                {"name": "Coastal Community Center", "capacity": 600, "occupied": 600, "status": "full"},
+                {"name": "High Land School Safe House", "capacity": 500, "occupied": 80, "status": "active"}
+            ]
+            routes = [
+                {"highway": "National Highway 16 (East Coast)", "status": "warning", "alternativeRoute": "District Inner Expressway"},
+                {"highway": "Port Connection Road", "status": "blocked", "alternativeRoute": "Coastal Protection Bypass"},
+                {"highway": "Main Arterial Way", "status": "open", "alternativeRoute": None}
+            ]
+        elif type_str == "heatwave":
+            shelters = [
+                {"name": f"{district} Public Cooling Center", "capacity": 300, "occupied": 120, "status": "active"},
+                {"name": "Municipal Red Cross Shelter", "capacity": 200, "occupied": 80, "status": "active"}
+            ]
+            routes = [
+                {"highway": "District Arterial Road", "status": "open", "alternativeRoute": None}
+            ]
+        else:
+            shelters = [
+                {"name": f"{district} Community Relief Center", "capacity": 500, "occupied": 150, "status": "active"}
+            ]
+            routes = [
+                {"highway": "State Highway Link", "status": "open", "alternativeRoute": None}
+            ]
+
         result.append({
             **a,
             "expectedStart": to_iso_str(start),
-            "expectedEnd": to_iso_str(end)
+            "expectedEnd": to_iso_str(end),
+            "activeShelters": shelters,
+            "evacuationRoutes": routes
         })
     return result
 

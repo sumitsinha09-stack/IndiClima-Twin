@@ -182,6 +182,61 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+.light {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+
+  --opaque-button-border-intensity: -9;
+
+  --elevate-1: rgba(0,0,0, .04);
+  --elevate-2: rgba(0,0,0, .09);
+
+  --background: 210 20% 98%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --card-border: 214.3 31.8% 91.4%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --popover-border: 214.3 31.8% 91.4%;
+
+  --primary: 199 89% 40%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 160 84% 30%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222 47% 11%;
+
+  --destructive: 0 84.2% 45%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 199 89% 40%;
+
+  --sidebar: 210 20% 95%;
+  --sidebar-foreground: 222 47% 11%;
+  --sidebar-border: 214.3 31.8% 91.4%;
+  --sidebar-primary: 199 89% 40%;
+  --sidebar-primary-foreground: 210 40% 98%;
+  --sidebar-accent: 210 40% 90%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-ring: 199 89% 40%;
+
+  --chart-1: 199 89% 40%;
+  --chart-2: 160 84% 30%;
+  --chart-3: 280 84% 50%;
+  --chart-4: 43 100% 40%;
+  --chart-5: 0 84% 50%;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -195,12 +250,24 @@
   @apply bg-card/60 backdrop-blur-md border border-white/10 shadow-lg shadow-black/50;
 }
 
+.light .glass-panel {
+  @apply bg-card/85 backdrop-blur-md border border-black/5 shadow-lg shadow-slate-200/50;
+}
+
 .neon-text {
   text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
 }
 
+.light .neon-text {
+  text-shadow: none;
+}
+
 .neon-border {
   box-shadow: 0 0 10px hsl(var(--primary) / 0.3), inset 0 0 10px hsl(var(--primary) / 0.3);
+}
+
+.light .neon-border {
+  box-shadow: none;
 }
 
 

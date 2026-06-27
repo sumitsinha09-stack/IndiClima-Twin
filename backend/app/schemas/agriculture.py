@@ -19,3 +19,9 @@ class AgricultureData(BaseModel):
     sowingAdvisory: str
     suitableCrops: List[SuitableCrop]
     yieldPredictions: List[YieldPrediction]
+
+class ChatMessage(BaseModel):
+    message: str
+
+class ChatResponse(BaseModel):
+    reply: str

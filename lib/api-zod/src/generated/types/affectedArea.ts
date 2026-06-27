@@ -5,10 +5,12 @@
  * ClimateTwin India API
  * OpenAPI spec version: 0.1.0
  */
+import type { ActiveShelter } from './activeShelter';
 import type { AffectedAreaCropImpact } from './affectedAreaCropImpact';
 import type { AffectedAreaImpactLevel } from './affectedAreaImpactLevel';
 import type { AffectedAreaInfrastructureRisk } from './affectedAreaInfrastructureRisk';
 import type { AffectedAreaWaterResourceImpact } from './affectedAreaWaterResourceImpact';
+import type { EvacuationRoute } from './evacuationRoute';
 
 export interface AffectedArea {
   state: string;
@@ -33,4 +35,6 @@ export interface AffectedArea {
   cropImpact: AffectedAreaCropImpact;
   waterResourceImpact: AffectedAreaWaterResourceImpact;
   precautionaryMeasures: string[];
+  activeShelters: ActiveShelter[];
+  evacuationRoutes: EvacuationRoute[];
 }

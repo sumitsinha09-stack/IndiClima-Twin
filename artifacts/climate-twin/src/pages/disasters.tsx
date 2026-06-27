@@ -327,6 +327,56 @@ function AffectedAreasTable({ areas, search }: { areas: AffectedArea[]; search: 
                         </ul>
                       </div>
                     </div>
+                    
+                    {/* Evacuation & Shelters Section */}
+                    <div className="mt-6 pt-6 border-t border-border/20 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-xs font-mono uppercase tracking-widest text-primary mb-3">
+                          Emergency Shelters & Capacities
+                        </p>
+                        <div className="space-y-3">
+                          {area.activeShelters?.map((shelter, si) => (
+                            <div key={si} className="p-3 rounded-lg bg-background/60 border border-border/40 flex items-center justify-between">
+                              <div>
+                                <div className="text-sm font-semibold">{shelter.name}</div>
+                                <div className="text-xs text-muted-foreground mt-0.5">Occupancy: {shelter.occupied} / {shelter.capacity}</div>
+                              </div>
+                              <span className={`px-2 py-0.5 rounded text-xs font-semibold border ${
+                                shelter.status === "full" ? "bg-destructive/10 text-destructive border-destructive/30" :
+                                "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                              }`}>
+                                {shelter.status.toUpperCase()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-mono uppercase tracking-widest text-primary mb-3">
+                          Active Evacuation Corridors
+                        </p>
+                        <div className="space-y-3">
+                          {area.evacuationRoutes?.map((route, ri) => (
+                            <div key={ri} className="p-3 rounded-lg bg-background/60 border border-border/40 flex items-center justify-between">
+                              <div>
+                                <div className="text-sm font-semibold">{route.highway}</div>
+                                {route.alternativeRoute && (
+                                  <div className="text-xs text-muted-foreground mt-0.5">Alt Route: {route.alternativeRoute}</div>
+                                )}
+                              </div>
+                              <span className={`px-2 py-0.5 rounded text-xs font-semibold border ${
+                                route.status === "blocked" || route.status === "inundated" ? "bg-destructive/10 text-destructive border-destructive/30" :
+                                route.status === "warning" ? "bg-amber-500/10 text-amber-500 border-amber-500/30" :
+                                "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
+                              }`}>
+                                {route.status.toUpperCase()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ),

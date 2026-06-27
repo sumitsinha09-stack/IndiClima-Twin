@@ -1,15 +1,51 @@
-import React from "react";
-import { useGetAgricultureDashboard, getGetAgricultureDashboardQueryKey } from "@workspace/api-client-react";
+import React, { useState } from "react";
+import { 
+  useGetAgricultureDashboard, 
+  getGetAgricultureDashboardQueryKey,
+  useChatAgriculture 
+} from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Sprout, Droplets, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sprout, Droplets, ArrowUpRight, ArrowDownRight, Send, BrainCircuit, Activity } from "lucide-react";
 
 export default function Agriculture() {
   const { data: agri, isLoading } = useGetAgricultureDashboard({
     query: { queryKey: getGetAgricultureDashboardQueryKey() }
   });
+
+  const [chatInput, setChatInput] = useState("");
+  const [chatHistory, setChatHistory] = useState<Array<{ sender: "user" | "bot"; text: string }>>([
+    {
+      sender: "bot",
+      text: "👋 Namaste! I am Krishi AI, your ClimateTwin Agricultural Advisor. Ask me anything about crop suitability, sowing cycles, or soil conditions!"
+    }
+  ]);
+
+  const { mutate: sendChatMessage, isPending: chatLoading } = useChatAgriculture();
+
+  const handleSendChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMessage = chatInput;
+    setChatHistory(prev => [...prev, { sender: "user", text: userMessage }]);
+    setChatInput("");
+
+    sendChatMessage(
+      { data: { message: userMessage } },
+      {
+        onSuccess: (data) => {
+          setChatHistory(prev => [...prev, { sender: "bot", text: data.reply }]);
+        },
+        onError: () => {
+          setChatHistory(prev => [...prev, { sender: "bot", text: "⚠️ Technical error. Could not connect to the advisory system. Please try again." }]);
+        }
+      }
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -131,6 +167,65 @@ export default function Agriculture() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Krishi AI Chatbot Card */}
+      <Card className="glass-panel border-secondary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-secondary neon-text">
+            <BrainCircuit className="w-5 h-5" />
+            Krishi AI Assistant
+          </CardTitle>
+          <p className="text-xs text-muted-foreground font-mono">Real-time localized agronomic consulting</p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col h-[320px]">
+            {/* Message List */}
+            <div className="flex-1 overflow-y-auto space-y-3 mb-4 pr-2 custom-scrollbar p-4 rounded-lg bg-background/30 border border-border/30 flex flex-col">
+              {chatHistory.map((chat, index) => (
+                <div 
+                  key={index} 
+                  className={`p-3 rounded-lg text-sm max-w-[85%] ${
+                    chat.sender === "user" 
+                      ? "self-end bg-primary/10 text-primary border border-primary/20" 
+                      : "self-start bg-secondary/5 text-foreground border border-secondary/25"
+                  }`}
+                >
+                  {chat.text}
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="self-start bg-secondary/5 text-muted-foreground border border-secondary/20 p-3 rounded-lg text-xs font-mono animate-pulse">
+                  🤖 Consulting agrometeorological databases...
+                </div>
+              )}
+            </div>
+
+            {/* Input Form */}
+            <form onSubmit={handleSendChat} className="flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Ask about paddy, cotton, wheat suitability or current soil moisture..."
+                disabled={chatLoading}
+                className="flex-1 bg-background/50 border border-border/50 rounded-lg px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-secondary/50 font-mono"
+              />
+              <Button 
+                type="submit" 
+                size="icon" 
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground" 
+                disabled={chatLoading}
+              >
+                {chatLoading ? (
+                  <Activity className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </form>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

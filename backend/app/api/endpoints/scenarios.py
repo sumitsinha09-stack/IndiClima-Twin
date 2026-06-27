@@ -11,6 +11,8 @@ async def simulate_scenario(payload: ScenarioInput):
     urb_pct = payload.urbanExpansionPercent
     sl_rise = payload.seaLevelRise
     co2_change = payload.carbonEmissionsChange
+    green_pct = payload.urbanGreenCoverPercent
+    albedo = payload.albedoIndex
 
     base_flood_risk = 38.0
     base_drought_risk = 30.0
@@ -34,6 +36,7 @@ async def simulate_scenario(payload: ScenarioInput):
         + def_pct * 0.5
     ))
 
+    # Heatwave risk adjusted by green cover and albedo
     heat_dec = r_change * 0.2 if r_change > 0 else 0.0
     heatwave_risk = min(100.0, max(0.0,
         base_heatwave_risk
@@ -41,6 +44,8 @@ async def simulate_scenario(payload: ScenarioInput):
         + urb_pct * 0.7
         + co2_change * 0.2
         - heat_dec
+        - green_pct * 0.2
+        - albedo * 10.0
     ))
 
     agriculture_impact = min(100.0, max(-100.0,
@@ -64,7 +69,14 @@ async def simulate_scenario(payload: ScenarioInput):
 
     def_co2 = abs(def_pct) * 1.5 if def_pct < 0 else def_pct * 2.0
     co2_concentration = 422.6 + co2_change * 0.8 - def_co2
-    surface_temp = 34.2 + t_change + urb_pct * 0.05 + co2_change * 0.02
+    
+    # Surface temperature offset by urban green cover and albedo reflectivity
+    surface_temp = 34.2 + t_change + urb_pct * 0.05 + co2_change * 0.02 - (green_pct * 0.04) - (albedo * 1.5)
+
+    # UHI Index ranges from 1.0 (very low) to 10.0 (extremely critical urban heat island effect)
+    uhi_index = max(1.0, min(10.0,
+        5.0 + (urb_pct * 0.15) - (green_pct * 0.06) - (albedo * 2.5) + (t_change * 0.2)
+    ))
 
     return ScenarioResult(
         floodRisk=round(flood_risk, 1),
@@ -74,5 +86,6 @@ async def simulate_scenario(payload: ScenarioInput):
         waterAvailability=round(water_availability, 1),
         affectedPopulation=affected_population,
         co2Concentration=round(co2_concentration, 1),
-        surfaceTemp=round(surface_temp, 1)
+        surfaceTemp=round(surface_temp, 1),
+        uhiIndex=round(uhi_index, 1)
     )

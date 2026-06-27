@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.endpoints import agriculture, alerts, climate, health, predictions, scenarios, water
+from app.api.endpoints import agriculture, alerts, climate, health, predictions, scenarios, water, energy, reports
 
 api_router = APIRouter()
 
@@ -11,3 +11,5 @@ api_router.include_router(predictions.router, tags=["predictions"])
 api_router.include_router(scenarios.router, tags=["scenarios"])
 api_router.include_router(agriculture.router, tags=["agriculture"])
 api_router.include_router(water.router, tags=["water"])
+api_router.include_router(energy.router, tags=["energy"])
+api_router.include_router(reports.router, tags=["reports"])

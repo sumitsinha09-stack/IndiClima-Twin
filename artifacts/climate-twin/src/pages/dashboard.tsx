@@ -13,6 +13,7 @@ import {
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { 
   Thermometer, 
   Droplets, 
@@ -25,7 +26,8 @@ import {
   Calendar,
   CloudLightning,
   Sun,
-  CloudFog
+  CloudFog,
+  FileDown
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -70,7 +72,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-display font-bold neon-text">Command Center</h1>
           <p className="text-muted-foreground font-mono text-sm mt-1">Live national climate overview</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Badge variant="outline" className="border-primary/50 text-primary bg-primary/10">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse mr-2"></span>
             Live Data Feed
@@ -78,6 +80,15 @@ export default function Dashboard() {
           <Badge variant="outline" className="border-secondary/50 text-secondary bg-secondary/10">
             {summary?.co2Level || "415"} ppm CO2
           </Badge>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => window.open("/api/reports/download", "_blank")} 
+            className="text-xs border-primary/50 text-primary bg-primary/10 hover:bg-primary/20 font-mono"
+          >
+            <FileDown className="w-3.5 h-3.5 mr-1" />
+            Export PDF
+          </Button>
         </div>
       </div>
 

@@ -18,4 +18,5 @@ export interface ScenarioResult {
   affectedPopulation: number;
   co2Concentration: number;
   surfaceTemp: number;
+  uhiIndex: number;
 }

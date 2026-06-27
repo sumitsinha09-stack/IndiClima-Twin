@@ -14,6 +14,7 @@ import Analytics from "@/pages/analytics";
 import Disasters from "@/pages/disasters";
 import Agriculture from "@/pages/agriculture";
 import Water from "@/pages/water";
+import EnergyPage from "@/pages/energy";
 import Settings from "@/pages/settings";
 
 const queryClient = new QueryClient({
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/disasters"><Layout><Disasters /></Layout></Route>
       <Route path="/agriculture"><Layout><Agriculture /></Layout></Route>
       <Route path="/water"><Layout><Water /></Layout></Route>
+      <Route path="/energy"><Layout><EnergyPage /></Layout></Route>
       <Route path="/settings"><Layout><Settings /></Layout></Route>
       <Route component={NotFound} />
     </Switch>

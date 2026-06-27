@@ -23,10 +23,15 @@ endpoints = [
         "deforestationPercent": 5.0,
         "urbanExpansionPercent": 8.0,
         "seaLevelRise": 0.2,
-        "carbonEmissionsChange": 15.0
+        "carbonEmissionsChange": 15.0,
+        "urbanGreenCoverPercent": 10.0,
+        "albedoIndex": 0.3
     }),
     ("/agriculture/dashboard", "GET", None),
     ("/water/dashboard", "GET", None),
+    ("/agriculture/chat", "POST", {"message": "How is the paddy crop doing?"}),
+    ("/energy/dashboard", "GET", None),
+    ("/reports/download", "GET", None),
 ]
 
 failed = False
@@ -43,12 +48,17 @@ for path, method, payload in endpoints:
             req.data = data
         
         with urllib.request.urlopen(req, timeout=5) as response:
-            body = response.read().decode("utf-8")
             status = response.status
+            content_type = response.info().get_content_type()
+            
             if status == 200:
                 print("SUCCESS")
-                # Parse to verify it's valid JSON
-                json.loads(body)
+                # Skip json check for PDF binary content
+                if content_type == "application/pdf" or path == "/reports/download":
+                    response.read() # just read it
+                else:
+                    body = response.read().decode("utf-8")
+                    json.loads(body)
             else:
                 print(f"FAILED (Status: {status})")
                 failed = True

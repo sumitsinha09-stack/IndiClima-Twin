@@ -139,7 +139,18 @@ export const GetDetailedAlertsResponseItem = zod.object({
   "infrastructureRisk": zod.enum(['low', 'moderate', 'high', 'critical']),
   "cropImpact": zod.enum(['none', 'low', 'moderate', 'high', 'severe']),
   "waterResourceImpact": zod.enum(['none', 'low', 'moderate', 'high', 'severe']),
-  "precautionaryMeasures": zod.array(zod.string())
+  "precautionaryMeasures": zod.array(zod.string()),
+  "activeShelters": zod.array(zod.object({
+  "name": zod.string(),
+  "capacity": zod.number(),
+  "occupied": zod.number(),
+  "status": zod.enum(['active', 'full', 'standby'])
+})),
+  "evacuationRoutes": zod.array(zod.object({
+  "highway": zod.string(),
+  "status": zod.enum(['open', 'warning', 'inundated', 'blocked']),
+  "alternativeRoute": zod.string().nullable()
+}))
 }))
 })
 export const GetDetailedAlertsResponse = zod.array(GetDetailedAlertsResponseItem)
@@ -239,7 +250,9 @@ export const RunScenarioBody = zod.object({
   "deforestationPercent": zod.number().optional().describe('Deforestation percentage (0-50)'),
   "urbanExpansionPercent": zod.number().optional().describe('Urban expansion percentage (0-30)'),
   "seaLevelRise": zod.number().optional().describe('Sea level rise in meters (0-2)'),
-  "carbonEmissionsChange": zod.number().optional().describe('Carbon emissions change percentage (-30 to +50)')
+  "carbonEmissionsChange": zod.number().optional().describe('Carbon emissions change percentage (-30 to +50)'),
+  "urbanGreenCoverPercent": zod.number().optional().describe('Urban green cover percentage (0-100)'),
+  "albedoIndex": zod.number().optional().describe('Urban albedo reflectivity index (0-1)')
 })
 
 export const RunScenarioResponse = zod.object({
@@ -250,7 +263,8 @@ export const RunScenarioResponse = zod.object({
   "waterAvailability": zod.number().describe('Change in water availability percentage'),
   "affectedPopulation": zod.number().describe('Estimated affected population in millions'),
   "co2Concentration": zod.number(),
-  "surfaceTemp": zod.number()
+  "surfaceTemp": zod.number(),
+  "uhiIndex": zod.number()
 })
 
 
@@ -304,5 +318,53 @@ export const GetWaterDashboardResponse = zod.object({
   "waterStressIndex": zod.number().optional(),
   "demandEstimate": zod.number().optional().describe('Water demand in billion cubic meters')
 })
+
+
+/**
+ * @summary Ask Krishi AI an advisory question
+ */
+export const ChatAgricultureBody = zod.object({
+  "message": zod.string()
+})
+
+export const ChatAgricultureResponse = zod.object({
+  "reply": zod.string()
+})
+
+
+/**
+ * @summary Get renewable energy potential dashboard data
+ */
+export const GetEnergyDashboardResponse = zod.object({
+  "totalSolarPotentialMw": zod.number(),
+  "totalWindPotentialMw": zod.number(),
+  "totalHydroPotentialMw": zod.number(),
+  "averageSolarIrradiance": zod.number(),
+  "averageWindSpeed": zod.number(),
+  "states": zod.array(zod.object({
+  "stateName": zod.string(),
+  "solarIrradiance": zod.number(),
+  "windSpeed": zod.number(),
+  "hydroPotential": zod.number(),
+  "solarCapacityMw": zod.number(),
+  "windCapacityMw": zod.number(),
+  "status": zod.enum(['optimal', 'high', 'moderate', 'low'])
+}))
+})
+
+
+/**
+ * @summary Download PDF summary report
+ */
+export const DownloadReportQueryParams = zod.object({
+  "temperatureChange": zod.coerce.number().optional(),
+  "rainfallChange": zod.coerce.number().optional(),
+  "deforestationPercent": zod.coerce.number().optional(),
+  "urbanExpansionPercent": zod.coerce.number().optional(),
+  "seaLevelRise": zod.coerce.number().optional(),
+  "carbonEmissionsChange": zod.coerce.number().optional()
+})
+
+export const DownloadReportResponse = zod.unknown()
 
 

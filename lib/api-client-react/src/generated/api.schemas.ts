@@ -179,6 +179,39 @@ export const AffectedAreaWaterResourceImpact = {
   severe: 'severe',
 } as const;
 
+export type ActiveShelterStatus = typeof ActiveShelterStatus[keyof typeof ActiveShelterStatus];
+
+
+export const ActiveShelterStatus = {
+  active: 'active',
+  full: 'full',
+  standby: 'standby',
+} as const;
+
+export interface ActiveShelter {
+  name: string;
+  capacity: number;
+  occupied: number;
+  status: ActiveShelterStatus;
+}
+
+export type EvacuationRouteStatus = typeof EvacuationRouteStatus[keyof typeof EvacuationRouteStatus];
+
+
+export const EvacuationRouteStatus = {
+  open: 'open',
+  warning: 'warning',
+  inundated: 'inundated',
+  blocked: 'blocked',
+} as const;
+
+export interface EvacuationRoute {
+  highway: string;
+  status: EvacuationRouteStatus;
+  /** @nullable */
+  alternativeRoute: string | null;
+}
+
 export interface AffectedArea {
   state: string;
   district: string;
@@ -202,6 +235,8 @@ export interface AffectedArea {
   cropImpact: AffectedAreaCropImpact;
   waterResourceImpact: AffectedAreaWaterResourceImpact;
   precautionaryMeasures: string[];
+  activeShelters: ActiveShelter[];
+  evacuationRoutes: EvacuationRoute[];
 }
 
 export type DetailedAlertType = typeof DetailedAlertType[keyof typeof DetailedAlertType];
@@ -358,6 +393,10 @@ export interface ScenarioInput {
   seaLevelRise?: number;
   /** Carbon emissions change percentage (-30 to +50) */
   carbonEmissionsChange?: number;
+  /** Urban green cover percentage (0-100) */
+  urbanGreenCoverPercent?: number;
+  /** Urban albedo reflectivity index (0-1) */
+  albedoIndex?: number;
 }
 
 export interface ScenarioResult {
@@ -372,6 +411,7 @@ export interface ScenarioResult {
   affectedPopulation: number;
   co2Concentration: number;
   surfaceTemp: number;
+  uhiIndex: number;
 }
 
 export type AgricultureDataRainfallOutlook = typeof AgricultureDataRainfallOutlook[keyof typeof AgricultureDataRainfallOutlook];
@@ -455,6 +495,43 @@ export interface WaterData {
   demandEstimate?: number;
 }
 
+export type StateEnergyPotentialStatus = typeof StateEnergyPotentialStatus[keyof typeof StateEnergyPotentialStatus];
+
+
+export const StateEnergyPotentialStatus = {
+  optimal: 'optimal',
+  high: 'high',
+  moderate: 'moderate',
+  low: 'low',
+} as const;
+
+export interface StateEnergyPotential {
+  stateName: string;
+  solarIrradiance: number;
+  windSpeed: number;
+  hydroPotential: number;
+  solarCapacityMw: number;
+  windCapacityMw: number;
+  status: StateEnergyPotentialStatus;
+}
+
+export interface EnergyPotentialData {
+  totalSolarPotentialMw: number;
+  totalWindPotentialMw: number;
+  totalHydroPotentialMw: number;
+  averageSolarIrradiance: number;
+  averageWindSpeed: number;
+  states: StateEnergyPotential[];
+}
+
+export interface ChatMessage {
+  message: string;
+}
+
+export interface ChatResponse {
+  reply: string;
+}
+
 export type GetMapLayersParams = {
 layer?: GetMapLayersLayer;
 };
@@ -483,4 +560,13 @@ export const GetClimateTrendsMetric = {
   rainfall: 'rainfall',
   humidity: 'humidity',
 } as const;
+
+export type DownloadReportParams = {
+temperatureChange?: number;
+rainfallChange?: number;
+deforestationPercent?: number;
+urbanExpansionPercent?: number;
+seaLevelRise?: number;
+carbonEmissionsChange?: number;
+};
 

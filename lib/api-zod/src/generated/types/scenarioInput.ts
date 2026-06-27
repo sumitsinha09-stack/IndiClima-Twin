@@ -19,4 +19,8 @@ export interface ScenarioInput {
   seaLevelRise?: number;
   /** Carbon emissions change percentage (-30 to +50) */
   carbonEmissionsChange?: number;
+  /** Urban green cover percentage (0-100) */
+  urbanGreenCoverPercent?: number;
+  /** Urban albedo reflectivity index (0-1) */
+  albedoIndex?: number;
 }

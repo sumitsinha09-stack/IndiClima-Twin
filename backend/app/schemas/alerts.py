@@ -13,6 +13,17 @@ class DisasterAlert(BaseModel):
     recommendedActions: List[str]
     issuedAt: str
 
+class ActiveShelter(BaseModel):
+    name: str
+    capacity: int
+    occupied: int
+    status: str
+
+class EvacuationRoute(BaseModel):
+    highway: str
+    status: str
+    alternativeRoute: Optional[str] = None
+
 class AffectedArea(BaseModel):
     state: str
     district: str
@@ -31,6 +42,8 @@ class AffectedArea(BaseModel):
     cropImpact: str
     waterResourceImpact: str
     precautionaryMeasures: List[str]
+    activeShelters: List[ActiveShelter]
+    evacuationRoutes: List[EvacuationRoute]
 
 class DetailedAlert(BaseModel):
     id: int

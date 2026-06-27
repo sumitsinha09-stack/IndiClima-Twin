@@ -7,6 +7,8 @@ class ScenarioInput(BaseModel):
     urbanExpansionPercent: float = 0.0
     seaLevelRise: float = 0.0
     carbonEmissionsChange: float = 0.0
+    urbanGreenCoverPercent: float = 0.0
+    albedoIndex: float = 0.0
 
 class ScenarioResult(BaseModel):
     floodRisk: float
@@ -17,3 +19,4 @@ class ScenarioResult(BaseModel):
     affectedPopulation: int
     co2Concentration: float
     surfaceTemp: float
+    uhiIndex: float
