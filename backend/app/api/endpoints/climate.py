@@ -8,6 +8,7 @@ from sqlalchemy import select, desc
 from app.database.session import get_db
 from app.models.base import ClimateSnapshot, ClimateSummary
 from app.schemas.climate import CurrentClimate, MapDataPoint, TrendDataPoint, ClimateSummary as ClimateSummarySchema
+from app.schemas.agriculture import ChatMessage, ChatResponse
 
 router = APIRouter()
 
@@ -151,3 +152,50 @@ async def get_climate_summary(db: AsyncSession = Depends(get_db)):
         tempAnomalyFromBaseline=jitter(s.temp_anomaly_from_baseline, 0.02),
         rainfallDeficit=jitter(s.rainfall_deficit, 0.03)
     )
+
+@router.post("/climate/chat", response_model=ChatResponse)
+async def chat_climate(payload: ChatMessage):
+    msg = payload.message.lower()
+    
+    if "concept" in msg or "about" in msg or "what is" in msg or "twin" in msg:
+        reply = (
+            "🌍 **ClimateTwin India** is a real-time digital twin platform designed to monitor and simulate India's changing microclimates. "
+            "It uses PostgreSQL storage and parametric modeling to visualize weather, reservoir fill levels, agricultural crop suitability, "
+            "and emergency disaster patterns in an integrated command center."
+        )
+    elif "simulate" in msg or "scenario" in msg or "formula" in msg or "math" in msg:
+        reply = (
+            "🖥️ **Scenario Simulator:** It leverages mathematical feedback loops mapping inputs like deforested surface percentages, "
+            "urban sprawl growth, and temperature deviations to compound hazards like flood probability, drought severity index, "
+            "and water stress factors. In our latest update, we also simulate **Urban Heat Island (UHI) Index** and green cover cooling effects!"
+        )
+    elif "disaster" in msg or "evacuate" in msg or "shelter" in msg or "camp" in msg or "highway" in msg:
+        reply = (
+            "🚨 **Disaster Command Center:** Tracks active alerts categorized by severity (watch, warning, severe, extreme). "
+            "In the detailed views, it displays active evacuation corridors (e.g. NH-15) and relief shelter capacities "
+            "to aid local disaster management authorities (NDRF/SDMAs) in planning."
+        )
+    elif "data" in msg or "source" in msg or "imd" in msg or "isro" in msg or "sensor" in msg or "real" in msg:
+        reply = (
+            "📡 **Data Telemetry:** The platform simulates live environmental reporting by applying mathematical jitter to PostgreSQL seeded baselines. "
+            "In production, this architecture is built to ingest real-time APIs from the Indian Meteorological Department (IMD), "
+            "CPCB (for AQI), and ISRO (satellite imagery)."
+        )
+    elif "energy" in msg or "solar" in msg or "wind" in msg or "hydro" in msg:
+        reply = (
+            "⚡ **Renewable Energy Dashboard:** Models clean energy potential (solar irradiance and wind speeds) across Indian states like Rajasthan, "
+            "Gujarat, and Tamil Nadu. It displays total grid capacity estimates under varying ambient temperature scenarios."
+        )
+    elif "agriculture" in msg or "crop" in msg or "soil" in msg or "krishi" in msg:
+        reply = (
+            "🌾 **Agriculture Viability:** Monitors crop suitability (e.g. Paddy, Cotton) and yield forecasts under changing soil moisture indices. "
+            "The built-in Krishi AI chatbot on the Agriculture page provides direct agronomic advisories based on current regional conditions."
+        )
+    else:
+        reply = (
+            "👋 **Hello! I am your ClimateTwin conceptual guide.**\n\n"
+            "I can answer questions about the platform's features, simulation algorithms, disaster tracking, and data sources. "
+            "Try asking me about the **simulation**, **disaster alerts**, **data sources**, or **renewable energy**!"
+        )
+        
+    return ChatResponse(reply=reply)

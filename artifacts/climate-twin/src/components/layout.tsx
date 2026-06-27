@@ -31,6 +31,7 @@ import { useRefreshManager } from "@/hooks/use-refresh-manager";
 import { RefreshTimer } from "@/components/refresh-timer";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
+import { GlobalChatbot } from "@/components/global-chatbot";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -131,6 +132,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               {children}
             </div>
           </main>
+
+          {/* Floating AI Chatbot at bottom left */}
+          <div className="absolute bottom-6 left-6 z-50">
+            <GlobalChatbot />
+          </div>
         </div>
       </div>
     </SidebarProvider>

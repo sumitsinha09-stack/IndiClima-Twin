@@ -1226,6 +1226,76 @@ export const useChatAgriculture = <TError = ErrorType<unknown>,
       return useMutation(getChatAgricultureMutationOptions(options));
     }
 
+export const getChatClimateUrl = () => {
+
+
+
+
+  return `/api/climate/chat`
+}
+
+/**
+ * @summary Ask ClimateTwin AI Advisor a conceptual question
+ */
+export const chatClimate = async (chatMessage: ChatMessage, options?: RequestInit): Promise<ChatResponse> => {
+
+  return customFetch<ChatResponse>(getChatClimateUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(chatMessage)
+  }
+);}
+
+
+
+
+export const getChatClimateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatClimate>>, TError,{data: BodyType<ChatMessage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof chatClimate>>, TError,{data: BodyType<ChatMessage>}, TContext> => {
+
+const mutationKey = ['chatClimate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof chatClimate>>, {data: BodyType<ChatMessage>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  chatClimate(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChatClimateMutationResult = NonNullable<Awaited<ReturnType<typeof chatClimate>>>
+    export type ChatClimateMutationBody = BodyType<ChatMessage>
+    export type ChatClimateMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Ask ClimateTwin AI Advisor a conceptual question
+ */
+export const useChatClimate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof chatClimate>>, TError,{data: BodyType<ChatMessage>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof chatClimate>>,
+        TError,
+        {data: BodyType<ChatMessage>},
+        TContext
+      > => {
+      return useMutation(getChatClimateMutationOptions(options));
+    }
+
 export const getGetEnergyDashboardUrl = () => {
 
 

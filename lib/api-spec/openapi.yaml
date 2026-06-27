@@ -260,6 +260,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/ChatResponse"
 
+
+  /climate/chat:
+    post:
+      operationId: chatClimate
+      tags: [climate]
+      summary: Ask ClimateTwin AI Advisor a conceptual question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessage"
+      responses:
+        "200":
+          description: Chat reply
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
   /energy/dashboard:
     get:
       operationId: getEnergyDashboard

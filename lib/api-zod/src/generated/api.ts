@@ -333,6 +333,18 @@ export const ChatAgricultureResponse = zod.object({
 
 
 /**
+ * @summary Ask ClimateTwin AI Advisor a conceptual question
+ */
+export const ChatClimateBody = zod.object({
+  "message": zod.string()
+})
+
+export const ChatClimateResponse = zod.object({
+  "reply": zod.string()
+})
+
+
+/**
  * @summary Get renewable energy potential dashboard data
  */
 export const GetEnergyDashboardResponse = zod.object({
