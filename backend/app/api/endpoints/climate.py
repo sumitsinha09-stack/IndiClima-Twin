@@ -1,4 +1,7 @@
 import random
+import os
+import json
+import urllib.request
 from datetime import datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -153,29 +156,85 @@ async def get_climate_summary(db: AsyncSession = Depends(get_db)):
         rainfallDeficit=jitter(s.rainfall_deficit, 0.03)
     )
 
+def call_gemini_api(prompt: str) -> Optional[str]:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+        
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+    
+    system_instruction = (
+        "You are the ClimateTwin AI Advisor, a conversational assistant integrated directly into the ClimateTwin India command center. "
+        "Your role is to answer questions about the ClimateTwin platform (the simulator, clean energy hub, Krishi AI chatbot, and emergency shelter routing) "
+        "as well as general climate science, microclimates in India, meteorological terms, crop suitability, and green energy. "
+        "Keep responses professional, concise (1-3 paragraphs), and format key parameters or instructions in markdown. "
+        "If asked about platform capabilities, relate it to the 6 modules: Dashboard, Agriculture, Water, Energy, Analytics, and Simulator."
+    )
+    
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": prompt
+                    }
+                ]
+            }
+        ],
+        "systemInstruction": {
+            "parts": [
+                {
+                    "text": system_instruction
+                }
+            ]
+        }
+    }
+    
+    try:
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=8) as response:
+            res_body = json.loads(response.read().decode("utf-8"))
+            reply = res_body['candidates'][0]['content']['parts'][0]['text']
+            return reply
+    except Exception as e:
+        print(f"Error calling Gemini API: {e}")
+        return None
+
 @router.post("/climate/chat", response_model=ChatResponse)
 async def chat_climate(payload: ChatMessage):
+    # Try calling the generative AI model
+    gemini_reply = call_gemini_api(payload.message)
+    if gemini_reply:
+        return ChatResponse(reply=gemini_reply)
+        
+    # Local intent fallback if Gemini API key is missing or calls fail
     msg = payload.message.lower()
     
-    if "concept" in msg or "about" in msg or "what is" in msg or "twin" in msg:
+    if "climatetwin" in msg or "concept of the project" in msg or "about the project" in msg:
         reply = (
             "🌍 **ClimateTwin India** is a real-time digital twin platform designed to monitor and simulate India's changing microclimates. "
             "It uses PostgreSQL storage and parametric modeling to visualize weather, reservoir fill levels, agricultural crop suitability, "
             "and emergency disaster patterns in an integrated command center."
         )
-    elif "simulate" in msg or "scenario" in msg or "formula" in msg or "math" in msg:
+    elif "simulate" in msg or "scenario" in msg or "uhi" in msg or "urban heat" in msg:
         reply = (
             "🖥️ **Scenario Simulator:** It leverages mathematical feedback loops mapping inputs like deforested surface percentages, "
             "urban sprawl growth, and temperature deviations to compound hazards like flood probability, drought severity index, "
             "and water stress factors. In our latest update, we also simulate **Urban Heat Island (UHI) Index** and green cover cooling effects!"
         )
-    elif "disaster" in msg or "evacuate" in msg or "shelter" in msg or "camp" in msg or "highway" in msg:
+    elif "disaster" in msg or "evacuate" in msg or "shelter" in msg or "relief" in msg or "highway" in msg:
         reply = (
             "🚨 **Disaster Command Center:** Tracks active alerts categorized by severity (watch, warning, severe, extreme). "
             "In the detailed views, it displays active evacuation corridors (e.g. NH-15) and relief shelter capacities "
             "to aid local disaster management authorities (NDRF/SDMAs) in planning."
         )
-    elif "data" in msg or "source" in msg or "imd" in msg or "isro" in msg or "sensor" in msg or "real" in msg:
+    elif "data" in msg or "source" in msg or "sensor" in msg or "telemetry" in msg:
         reply = (
             "📡 **Data Telemetry:** The platform simulates live environmental reporting by applying mathematical jitter to PostgreSQL seeded baselines. "
             "In production, this architecture is built to ingest real-time APIs from the Indian Meteorological Department (IMD), "
@@ -194,8 +253,8 @@ async def chat_climate(payload: ChatMessage):
     else:
         reply = (
             "👋 **Hello! I am your ClimateTwin conceptual guide.**\n\n"
-            "I can answer questions about the platform's features, simulation algorithms, disaster tracking, and data sources. "
-            "Try asking me about the **simulation**, **disaster alerts**, **data sources**, or **renewable energy**!"
+            "I can answer questions about the platform's features, simulation algorithms, disaster tracking, and data sources.\n\n"
+            "💡 *Tip: To enable fully dynamic AI responses powered by Gemini, simply set your `GEMINI_API_KEY` in the project `.env` file!*"
         )
         
     return ChatResponse(reply=reply)
