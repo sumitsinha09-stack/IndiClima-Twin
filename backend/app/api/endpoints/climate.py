@@ -260,10 +260,11 @@ async def chat_climate(payload: ChatMessage, db: AsyncSession = Depends(get_db))
         
     # Local intent fallback if Gemini API key is missing or calls fail
     msg = payload.message.lower()
+    has_key = bool(os.getenv("GEMINI_API_KEY"))
     
-    if "climatetwin" in msg or "concept of the project" in msg or "about the project" in msg:
+    if "climatetwin" in msg or "indiclima" in msg or "concept of the project" in msg or "about the project" in msg:
         reply = (
-            "🌍 **ClimateTwin India** is a real-time digital twin platform designed to monitor and simulate India's changing microclimates. "
+            "🌍 **IndiClima Twin India** is a real-time digital twin platform designed to monitor and simulate India's changing microclimates. "
             "It uses PostgreSQL storage and parametric modeling to visualize weather, reservoir fill levels, agricultural crop suitability, "
             "and emergency disaster patterns in an integrated command center."
         )
@@ -296,10 +297,15 @@ async def chat_climate(payload: ChatMessage, db: AsyncSession = Depends(get_db))
             "The built-in Krishi AI chatbot on the Agriculture page provides direct agronomic advisories based on current regional conditions."
         )
     else:
-        reply = (
-            "👋 **Hello! I am your ClimateTwin conceptual guide.**\n\n"
-            "I can answer questions about the platform's features, simulation algorithms, disaster tracking, and data sources.\n\n"
+        tip = (
+            "💡 *Note: The dynamic Gemini AI is currently experiencing high demand or rate limits. Operating in local guide mode.*"
+            if has_key else
             "💡 *Tip: To enable fully dynamic AI responses powered by Gemini, simply set your `GEMINI_API_KEY` in the project `.env` file!*"
+        )
+        reply = (
+            "👋 **Hello! I am your IndiClima Twin conceptual guide.**\n\n"
+            "I can answer questions about the platform's features, simulation algorithms, disaster tracking, and data sources.\n\n"
+            f"{tip}"
         )
         
     return ChatResponse(reply=reply)
