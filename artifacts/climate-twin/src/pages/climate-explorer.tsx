@@ -115,6 +115,27 @@ const WEATHER_STYLES = `
 .light .neon-glow {
   text-shadow: none;
 }
+/* SVG Map Light Mode Overrides */
+.glass-card polygon[fill="rgba(255,255,255,0.03)"] {
+  fill: rgba(255, 255, 255, 0.03);
+}
+.light .glass-card polygon[fill="rgba(255,255,255,0.03)"] {
+  fill: rgba(15, 23, 42, 0.05);
+}
+.glass-card polygon[stroke="rgba(255,255,255,0.2)"] {
+  stroke: rgba(255, 255, 255, 0.15);
+}
+.light .glass-card polygon[stroke="rgba(255,255,255,0.2)"] {
+  stroke: rgba(15, 23, 42, 0.18);
+}
+.glass-card circle[stroke="rgba(255,255,255,0.02)"],
+.glass-card line[stroke="rgba(255,255,255,0.02)"] {
+  stroke: rgba(255, 255, 255, 0.02);
+}
+.light .glass-card circle[stroke="rgba(255,255,255,0.02)"],
+.light .glass-card line[stroke="rgba(255,255,255,0.02)"] {
+  stroke: rgba(15, 23, 42, 0.08);
+}
 `;
 
 // Helper component for animated weather conditions
@@ -467,7 +488,7 @@ export default function ClimateExplorer() {
             variant="outline"
             size="sm"
             onClick={downloadPdfReport}
-            className="border-sky-500/30 bg-sky-500/5 hover:bg-sky-500/10 text-sky-400"
+            className="border-sky-500/30 bg-sky-500/5 hover:bg-sky-500/10 text-sky-600 dark:text-sky-400"
           >
             <FileText className="w-4 h-4 mr-1.5" />
             Export PDF
@@ -477,7 +498,7 @@ export default function ClimateExplorer() {
             variant="outline"
             size="sm"
             onClick={exportForecastToCsv}
-            className="border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400"
+            className="border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
           >
             <FileSpreadsheet className="w-4 h-4 mr-1.5" />
             Export CSV
@@ -487,7 +508,7 @@ export default function ClimateExplorer() {
             variant="outline"
             size="sm"
             onClick={shareReportLink}
-            className="border-slate-500/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-300"
+            className="border-slate-500/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-600 dark:text-slate-300"
           >
             <Share2 className="w-4 h-4 mr-1.5" />
             Share Link
@@ -790,7 +811,7 @@ export default function ClimateExplorer() {
                 )}
               </svg>
             </CardContent>
-            <div className="bg-slate-900/60 py-1.5 px-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-muted-foreground shrink-0">
+            <div className="bg-muted/40 dark:bg-slate-900/60 py-1.5 px-3 border-t border-border/40 dark:border-white/5 flex items-center justify-between text-[10px] font-mono text-muted-foreground shrink-0">
               <span>LAT: {explorerData?.location.lat.toFixed(4) || "0.00"} N</span>
               <span>LNG: {explorerData?.location.lng.toFixed(4) || "0.00"} E</span>
             </div>
