@@ -82,7 +82,7 @@ export default function AiPredictions() {
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-mono">High Risk Regions</div>
                   <div className="flex flex-wrap gap-2">
                     {risk.topRegions.map((region: string) => (
-                      <Badge key={region} variant="secondary" className="bg-background/50 border-border">
+                      <Badge key={region} variant="outline" className="bg-background/40 border-border/60 text-foreground font-medium">
                         {region}
                       </Badge>
                     ))}
