@@ -338,6 +338,80 @@ paths:
                 type: string
                 format: binary
 
+  /climate/explorer/locations:
+    get:
+      operationId: getClimateExplorerLocations
+      tags: [climate]
+      summary: Get list of available states, districts, and cities in India
+      responses:
+        "200":
+          description: List of locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExplorerLocation"
+
+  /climate/explorer/data:
+    get:
+      operationId: getClimateExplorerData
+      tags: [climate]
+      summary: Get unified climate explorer details for selected location
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: district
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Climate profile details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExplorerClimateData"
+
+  /climate/explorer/report:
+    get:
+      operationId: getClimateExplorerReport
+      tags: [reports]
+      summary: Download PDF climate report for specific location
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: district
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: PDF report file download
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
 components:
   schemas:
     HealthStatus:
@@ -922,3 +996,277 @@ components:
       properties:
         reply:
           type: string
+
+    ExplorerLocation:
+      type: object
+      required: [state, district, city, lat, lng, zone]
+      properties:
+        state:
+          type: string
+        district:
+          type: string
+        city:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        zone:
+          type: string
+
+    ExplorerCurrentClimate:
+      type: object
+      required: [temperature, feelsLike, minTemp, maxTemp, humidity, rainfall, windSpeed, windDirection, windDirectionDeg, airPressure, visibility, uvIndex, cloudCover, aqi, soilMoisture, heatIndex, dewPoint, sunrise, sunset, condition]
+      properties:
+        temperature:
+          type: number
+        feelsLike:
+          type: number
+        minTemp:
+          type: number
+        maxTemp:
+          type: number
+        humidity:
+          type: number
+        rainfall:
+          type: number
+        windSpeed:
+          type: number
+        windDirection:
+          type: string
+        windDirectionDeg:
+          type: number
+        airPressure:
+          type: number
+        visibility:
+          type: number
+        uvIndex:
+          type: number
+        cloudCover:
+          type: number
+        aqi:
+          type: integer
+        soilMoisture:
+          type: ["number", "null"]
+        heatIndex:
+          type: number
+        dewPoint:
+          type: number
+        sunrise:
+          type: string
+        sunset:
+          type: string
+        condition:
+          type: string
+          enum: [sunny, cloudy, rain, thunderstorm, fog, snow]
+
+    ExplorerHourlyForecast:
+      type: object
+      required: [time, temp, tempLower, tempUpper, condition, humidity, rainProbability]
+      properties:
+        time:
+          type: string
+        temp:
+          type: number
+        tempLower:
+          type: number
+        tempUpper:
+          type: number
+        condition:
+          type: string
+          enum: [sunny, cloudy, rain, thunderstorm, fog, snow]
+        humidity:
+          type: number
+        rainProbability:
+          type: number
+
+    ExplorerDailyForecast:
+      type: object
+      required: [date, maxTemp, maxTempLower, maxTempUpper, minTemp, minTempLower, minTempUpper, condition, humidity, rainProbability, rainfall, windSpeed]
+      properties:
+        date:
+          type: string
+        maxTemp:
+          type: number
+        maxTempLower:
+          type: number
+        maxTempUpper:
+          type: number
+        minTemp:
+          type: number
+        minTempLower:
+          type: number
+        minTempUpper:
+          type: number
+        condition:
+          type: string
+          enum: [sunny, cloudy, rain, thunderstorm, fog, snow]
+        humidity:
+          type: number
+        rainProbability:
+          type: number
+        rainfall:
+          type: number
+        windSpeed:
+          type: number
+
+    ExplorerForecast:
+      type: object
+      required: [hourly, daily, weeklyTrend, seasonalOutlook, forecastAccuracy]
+      properties:
+        hourly:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExplorerHourlyForecast"
+        daily:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExplorerDailyForecast"
+        weeklyTrend:
+          type: string
+        seasonalOutlook:
+          type: string
+        forecastAccuracy:
+          type: number
+
+    YearlyAnomaly:
+      type: object
+      required: [year, value, anomaly]
+      properties:
+        year:
+          type: integer
+        value:
+          type: number
+        anomaly:
+          type: number
+
+    ExplorerTrends:
+      type: object
+      required: [warmingRateDecade, extremeHeatDaysTrend, monsoonOnsetTrend, annualRainfallAnomaly, temperatureAnomalies, rainfallTrends]
+      properties:
+        warmingRateDecade:
+          type: number
+        extremeHeatDaysTrend:
+          type: string
+        monsoonOnsetTrend:
+          type: string
+        annualRainfallAnomaly:
+          type: number
+        temperatureAnomalies:
+          type: array
+          items:
+            $ref: "#/components/schemas/YearlyAnomaly"
+        rainfallTrends:
+          type: array
+          items:
+            $ref: "#/components/schemas/YearlyAnomaly"
+
+    DisasterRiskDetail:
+      type: object
+      required: [hazard, riskLevel, probability, expectedStart, expectedDuration, affectedAreas, severityScore, confidenceScore, precautions]
+      properties:
+        hazard:
+          type: string
+          enum: [flood, flash_flood, cyclone, heatwave, cold_wave, heavy_rainfall, cloudburst, drought, landslide, forest_fire, lightning, dust_storm, coastal_surge]
+        riskLevel:
+          type: string
+          enum: [low, moderate, high, severe]
+        probability:
+          type: number
+        expectedStart:
+          type: string
+        expectedDuration:
+          type: string
+        affectedAreas:
+          type: array
+          items:
+            type: string
+        severityScore:
+          type: number
+        confidenceScore:
+          type: number
+        precautions:
+          type: array
+          items:
+            type: string
+        governmentAdvisory:
+          type: ["string", "null"]
+
+    ExplorerDisasterRisk:
+      type: object
+      required: [activeAlerts, historicalOccurrenceCount]
+      properties:
+        activeAlerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/DisasterRiskDetail"
+        historicalOccurrenceCount:
+          type: integer
+
+    MonthlyHistoricalData:
+      type: object
+      required: [month, year, temperature, rainfall, humidity, aqi]
+      properties:
+        month:
+          type: string
+        year:
+          type: integer
+        temperature:
+          type: number
+        rainfall:
+          type: number
+        humidity:
+          type: number
+        aqi:
+          type: number
+
+    HistoricalDisaster:
+      type: object
+      required: [year, date, type, severity, description]
+      properties:
+        year:
+          type: integer
+        date:
+          type: string
+        type:
+          type: string
+        severity:
+          type: string
+        description:
+          type: string
+
+    ExplorerHistorical:
+      type: object
+      required: [yearsAvailable, monthlyAverages, previousDisasters]
+      properties:
+        yearsAvailable:
+          type: array
+          items:
+            type: integer
+        monthlyAverages:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthlyHistoricalData"
+        previousDisasters:
+          type: array
+          items:
+            $ref: "#/components/schemas/HistoricalDisaster"
+
+    ExplorerClimateData:
+      type: object
+      required: [location, current, forecast, trends, disasterRisk, aiSummary, historical]
+      properties:
+        location:
+          $ref: "#/components/schemas/ExplorerLocation"
+        current:
+          $ref: "#/components/schemas/ExplorerCurrentClimate"
+        forecast:
+          $ref: "#/components/schemas/ExplorerForecast"
+        trends:
+          $ref: "#/components/schemas/ExplorerTrends"
+        disasterRisk:
+          $ref: "#/components/schemas/ExplorerDisasterRisk"
+        aiSummary:
+          type: string
+        historical:
+          $ref: "#/components/schemas/ExplorerHistorical"

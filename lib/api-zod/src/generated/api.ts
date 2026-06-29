@@ -380,3 +380,150 @@ export const DownloadReportQueryParams = zod.object({
 export const DownloadReportResponse = zod.unknown()
 
 
+/**
+ * @summary Get list of available states, districts, and cities in India
+ */
+export const GetClimateExplorerLocationsResponseItem = zod.object({
+  "state": zod.string(),
+  "district": zod.string(),
+  "city": zod.string(),
+  "lat": zod.number(),
+  "lng": zod.number(),
+  "zone": zod.string()
+})
+export const GetClimateExplorerLocationsResponse = zod.array(GetClimateExplorerLocationsResponseItem)
+
+
+/**
+ * @summary Get unified climate explorer details for selected location
+ */
+export const GetClimateExplorerDataQueryParams = zod.object({
+  "state": zod.coerce.string().optional(),
+  "district": zod.coerce.string().optional(),
+  "city": zod.coerce.string().optional()
+})
+
+export const GetClimateExplorerDataResponse = zod.object({
+  "location": zod.object({
+  "state": zod.string(),
+  "district": zod.string(),
+  "city": zod.string(),
+  "lat": zod.number(),
+  "lng": zod.number(),
+  "zone": zod.string()
+}),
+  "current": zod.object({
+  "temperature": zod.number(),
+  "feelsLike": zod.number(),
+  "minTemp": zod.number(),
+  "maxTemp": zod.number(),
+  "humidity": zod.number(),
+  "rainfall": zod.number(),
+  "windSpeed": zod.number(),
+  "windDirection": zod.string(),
+  "windDirectionDeg": zod.number(),
+  "airPressure": zod.number(),
+  "visibility": zod.number(),
+  "uvIndex": zod.number(),
+  "cloudCover": zod.number(),
+  "aqi": zod.number(),
+  "soilMoisture": zod.number().nullable(),
+  "heatIndex": zod.number(),
+  "dewPoint": zod.number(),
+  "sunrise": zod.string(),
+  "sunset": zod.string(),
+  "condition": zod.enum(['sunny', 'cloudy', 'rain', 'thunderstorm', 'fog', 'snow'])
+}),
+  "forecast": zod.object({
+  "hourly": zod.array(zod.object({
+  "time": zod.string(),
+  "temp": zod.number(),
+  "tempLower": zod.number(),
+  "tempUpper": zod.number(),
+  "condition": zod.enum(['sunny', 'cloudy', 'rain', 'thunderstorm', 'fog', 'snow']),
+  "humidity": zod.number(),
+  "rainProbability": zod.number()
+})),
+  "daily": zod.array(zod.object({
+  "date": zod.string(),
+  "maxTemp": zod.number(),
+  "maxTempLower": zod.number(),
+  "maxTempUpper": zod.number(),
+  "minTemp": zod.number(),
+  "minTempLower": zod.number(),
+  "minTempUpper": zod.number(),
+  "condition": zod.enum(['sunny', 'cloudy', 'rain', 'thunderstorm', 'fog', 'snow']),
+  "humidity": zod.number(),
+  "rainProbability": zod.number(),
+  "rainfall": zod.number(),
+  "windSpeed": zod.number()
+})),
+  "weeklyTrend": zod.string(),
+  "seasonalOutlook": zod.string(),
+  "forecastAccuracy": zod.number()
+}),
+  "trends": zod.object({
+  "warmingRateDecade": zod.number(),
+  "extremeHeatDaysTrend": zod.string(),
+  "monsoonOnsetTrend": zod.string(),
+  "annualRainfallAnomaly": zod.number(),
+  "temperatureAnomalies": zod.array(zod.object({
+  "year": zod.number(),
+  "value": zod.number(),
+  "anomaly": zod.number()
+})),
+  "rainfallTrends": zod.array(zod.object({
+  "year": zod.number(),
+  "value": zod.number(),
+  "anomaly": zod.number()
+}))
+}),
+  "disasterRisk": zod.object({
+  "activeAlerts": zod.array(zod.object({
+  "hazard": zod.enum(['flood', 'flash_flood', 'cyclone', 'heatwave', 'cold_wave', 'heavy_rainfall', 'cloudburst', 'drought', 'landslide', 'forest_fire', 'lightning', 'dust_storm', 'coastal_surge']),
+  "riskLevel": zod.enum(['low', 'moderate', 'high', 'severe']),
+  "probability": zod.number(),
+  "expectedStart": zod.string(),
+  "expectedDuration": zod.string(),
+  "affectedAreas": zod.array(zod.string()),
+  "severityScore": zod.number(),
+  "confidenceScore": zod.number(),
+  "precautions": zod.array(zod.string()),
+  "governmentAdvisory": zod.string().nullish()
+})),
+  "historicalOccurrenceCount": zod.number()
+}),
+  "aiSummary": zod.string(),
+  "historical": zod.object({
+  "yearsAvailable": zod.array(zod.number()),
+  "monthlyAverages": zod.array(zod.object({
+  "month": zod.string(),
+  "year": zod.number(),
+  "temperature": zod.number(),
+  "rainfall": zod.number(),
+  "humidity": zod.number(),
+  "aqi": zod.number()
+})),
+  "previousDisasters": zod.array(zod.object({
+  "year": zod.number(),
+  "date": zod.string(),
+  "type": zod.string(),
+  "severity": zod.string(),
+  "description": zod.string()
+}))
+})
+})
+
+
+/**
+ * @summary Download PDF climate report for specific location
+ */
+export const GetClimateExplorerReportQueryParams = zod.object({
+  "state": zod.coerce.string().optional(),
+  "district": zod.coerce.string().optional(),
+  "city": zod.coerce.string().optional()
+})
+
+export const GetClimateExplorerReportResponse = zod.unknown()
+
+

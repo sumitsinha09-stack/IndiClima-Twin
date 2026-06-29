@@ -30,7 +30,11 @@ import type {
   DisasterAlert,
   DownloadReportParams,
   EnergyPotentialData,
+  ExplorerClimateData,
+  ExplorerLocation,
   ForecastDay,
+  GetClimateExplorerDataParams,
+  GetClimateExplorerReportParams,
   GetClimateTrendsParams,
   GetMapLayersParams,
   HealthStatus,
@@ -1445,6 +1449,251 @@ export function useDownloadReport<TData = Awaited<ReturnType<typeof downloadRepo
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getDownloadReportQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClimateExplorerLocationsUrl = () => {
+
+
+
+
+  return `/api/climate/explorer/locations`
+}
+
+/**
+ * @summary Get list of available states, districts, and cities in India
+ */
+export const getClimateExplorerLocations = async ( options?: RequestInit): Promise<ExplorerLocation[]> => {
+
+  return customFetch<ExplorerLocation[]>(getGetClimateExplorerLocationsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClimateExplorerLocationsQueryKey = () => {
+    return [
+    `/api/climate/explorer/locations`
+    ] as const;
+    }
+
+
+export const getGetClimateExplorerLocationsQueryOptions = <TData = Awaited<ReturnType<typeof getClimateExplorerLocations>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClimateExplorerLocationsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClimateExplorerLocations>>> = ({ signal }) => getClimateExplorerLocations({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerLocations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClimateExplorerLocationsQueryResult = NonNullable<Awaited<ReturnType<typeof getClimateExplorerLocations>>>
+export type GetClimateExplorerLocationsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get list of available states, districts, and cities in India
+ */
+
+export function useGetClimateExplorerLocations<TData = Awaited<ReturnType<typeof getClimateExplorerLocations>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClimateExplorerLocationsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClimateExplorerDataUrl = (params?: GetClimateExplorerDataParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/climate/explorer/data?${stringifiedParams}` : `/api/climate/explorer/data`
+}
+
+/**
+ * @summary Get unified climate explorer details for selected location
+ */
+export const getClimateExplorerData = async (params?: GetClimateExplorerDataParams, options?: RequestInit): Promise<ExplorerClimateData> => {
+
+  return customFetch<ExplorerClimateData>(getGetClimateExplorerDataUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClimateExplorerDataQueryKey = (params?: GetClimateExplorerDataParams,) => {
+    return [
+    `/api/climate/explorer/data`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetClimateExplorerDataQueryOptions = <TData = Awaited<ReturnType<typeof getClimateExplorerData>>, TError = ErrorType<unknown>>(params?: GetClimateExplorerDataParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerData>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClimateExplorerDataQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClimateExplorerData>>> = ({ signal }) => getClimateExplorerData(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerData>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClimateExplorerDataQueryResult = NonNullable<Awaited<ReturnType<typeof getClimateExplorerData>>>
+export type GetClimateExplorerDataQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get unified climate explorer details for selected location
+ */
+
+export function useGetClimateExplorerData<TData = Awaited<ReturnType<typeof getClimateExplorerData>>, TError = ErrorType<unknown>>(
+ params?: GetClimateExplorerDataParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerData>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClimateExplorerDataQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetClimateExplorerReportUrl = (params?: GetClimateExplorerReportParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/climate/explorer/report?${stringifiedParams}` : `/api/climate/explorer/report`
+}
+
+/**
+ * @summary Download PDF climate report for specific location
+ */
+export const getClimateExplorerReport = async (params?: GetClimateExplorerReportParams, options?: RequestInit): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetClimateExplorerReportUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClimateExplorerReportQueryKey = (params?: GetClimateExplorerReportParams,) => {
+    return [
+    `/api/climate/explorer/report`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetClimateExplorerReportQueryOptions = <TData = Awaited<ReturnType<typeof getClimateExplorerReport>>, TError = ErrorType<unknown>>(params?: GetClimateExplorerReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClimateExplorerReportQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClimateExplorerReport>>> = ({ signal }) => getClimateExplorerReport(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClimateExplorerReportQueryResult = NonNullable<Awaited<ReturnType<typeof getClimateExplorerReport>>>
+export type GetClimateExplorerReportQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Download PDF climate report for specific location
+ */
+
+export function useGetClimateExplorerReport<TData = Awaited<ReturnType<typeof getClimateExplorerReport>>, TError = ErrorType<unknown>>(
+ params?: GetClimateExplorerReportParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClimateExplorerReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClimateExplorerReportQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -16,6 +16,7 @@ import Agriculture from "@/pages/agriculture";
 import Water from "@/pages/water";
 import EnergyPage from "@/pages/energy";
 import Settings from "@/pages/settings";
+import ClimateExplorer from "@/pages/climate-explorer";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/dashboard"><Layout><Dashboard /></Layout></Route>
       <Route path="/map"><Layout><MapPage /></Layout></Route>
+      <Route path="/climate-explorer"><Layout><ClimateExplorer /></Layout></Route>
       <Route path="/ai-predictions"><Layout><AiPredictions /></Layout></Route>
       <Route path="/simulator"><Layout><Simulator /></Layout></Route>
       <Route path="/analytics"><Layout><Analytics /></Layout></Route>

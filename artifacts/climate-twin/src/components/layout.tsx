@@ -26,6 +26,7 @@ import {
   Zap,
   Sun,
   Moon,
+  Compass,
 } from "lucide-react";
 import { useRefreshManager } from "@/hooks/use-refresh-manager";
 import { RefreshTimer } from "@/components/refresh-timer";
@@ -36,6 +37,7 @@ import { GlobalChatbot } from "@/components/global-chatbot";
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Interactive Map", url: "/map", icon: MapIcon },
+  { title: "Climate Explorer", url: "/climate-explorer", icon: Compass },
   { title: "AI Predictions", url: "/ai-predictions", icon: BrainCircuit },
   { title: "Disaster Alerts", url: "/disasters", icon: AlertTriangle },
   { title: "Agriculture", url: "/agriculture", icon: Sprout },

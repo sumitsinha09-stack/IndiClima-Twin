@@ -10,6 +10,7 @@ ClimateTwin India is a full-stack, real-time climate intelligence platform that 
 
 - **Live Command Center** — national-level climate metrics auto-refreshed every 60 seconds with a visible countdown timer
 - **Interactive India Map** — SVG-based climate map with switchable layers (temperature, rainfall, wind, humidity, flood zones, AQI)
+- **Climate Explorer & Forecast Intelligence** — search any state, district, or city in India (using autocomplete query hierarchy or interactive state selector SVG map) to analyze current weather telemetry, 72-hour temperature predictions with Area confidence bounds, 15-day outlooks, 30-year anomalies, disaster risk timelines, split screen GIS layer comparators, and export PDF reports/CSV data.
 - **AI Climate Predictions** — risk-score rings for flood, cyclone, heatwave, drought, landslide, and forest fire with confidence and trend indicators
 - **Disaster Prediction Module** — severity-coded alerts with per-district affected areas, population at risk, meteorological parameters, and sortable/searchable tables
 - **Digital Twin Scenario Simulator** — sliders for temperature change, rainfall, deforestation, urban expansion, sea-level rise, and carbon emissions; live-updating impact scores
@@ -203,6 +204,9 @@ All routes are prefixed with `/api`.
 | POST | `/scenarios/simulate` | Run a digital twin scenario (request body: ScenarioInput) |
 | GET | `/agriculture/dashboard` | Agriculture dashboard data |
 | GET | `/water/dashboard` | Water resource dashboard data |
+| GET | `/climate/explorer/locations` | Get list of available states, districts, and cities in India |
+| GET | `/climate/explorer/data` | Get unified climate explorer details for selected location |
+| GET | `/climate/explorer/report` | Download PDF climate report for specific location |
 
 The full API contract is defined in `lib/api-spec/openapi.yaml`.
 

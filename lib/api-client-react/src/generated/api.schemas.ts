@@ -532,6 +532,204 @@ export interface ChatResponse {
   reply: string;
 }
 
+export interface ExplorerLocation {
+  state: string;
+  district: string;
+  city: string;
+  lat: number;
+  lng: number;
+  zone: string;
+}
+
+export type ExplorerCurrentClimateCondition = typeof ExplorerCurrentClimateCondition[keyof typeof ExplorerCurrentClimateCondition];
+
+
+export const ExplorerCurrentClimateCondition = {
+  sunny: 'sunny',
+  cloudy: 'cloudy',
+  rain: 'rain',
+  thunderstorm: 'thunderstorm',
+  fog: 'fog',
+  snow: 'snow',
+} as const;
+
+export interface ExplorerCurrentClimate {
+  temperature: number;
+  feelsLike: number;
+  minTemp: number;
+  maxTemp: number;
+  humidity: number;
+  rainfall: number;
+  windSpeed: number;
+  windDirection: string;
+  windDirectionDeg: number;
+  airPressure: number;
+  visibility: number;
+  uvIndex: number;
+  cloudCover: number;
+  aqi: number;
+  /** @nullable */
+  soilMoisture: number | null;
+  heatIndex: number;
+  dewPoint: number;
+  sunrise: string;
+  sunset: string;
+  condition: ExplorerCurrentClimateCondition;
+}
+
+export type ExplorerHourlyForecastCondition = typeof ExplorerHourlyForecastCondition[keyof typeof ExplorerHourlyForecastCondition];
+
+
+export const ExplorerHourlyForecastCondition = {
+  sunny: 'sunny',
+  cloudy: 'cloudy',
+  rain: 'rain',
+  thunderstorm: 'thunderstorm',
+  fog: 'fog',
+  snow: 'snow',
+} as const;
+
+export interface ExplorerHourlyForecast {
+  time: string;
+  temp: number;
+  tempLower: number;
+  tempUpper: number;
+  condition: ExplorerHourlyForecastCondition;
+  humidity: number;
+  rainProbability: number;
+}
+
+export type ExplorerDailyForecastCondition = typeof ExplorerDailyForecastCondition[keyof typeof ExplorerDailyForecastCondition];
+
+
+export const ExplorerDailyForecastCondition = {
+  sunny: 'sunny',
+  cloudy: 'cloudy',
+  rain: 'rain',
+  thunderstorm: 'thunderstorm',
+  fog: 'fog',
+  snow: 'snow',
+} as const;
+
+export interface ExplorerDailyForecast {
+  date: string;
+  maxTemp: number;
+  maxTempLower: number;
+  maxTempUpper: number;
+  minTemp: number;
+  minTempLower: number;
+  minTempUpper: number;
+  condition: ExplorerDailyForecastCondition;
+  humidity: number;
+  rainProbability: number;
+  rainfall: number;
+  windSpeed: number;
+}
+
+export interface ExplorerForecast {
+  hourly: ExplorerHourlyForecast[];
+  daily: ExplorerDailyForecast[];
+  weeklyTrend: string;
+  seasonalOutlook: string;
+  forecastAccuracy: number;
+}
+
+export interface YearlyAnomaly {
+  year: number;
+  value: number;
+  anomaly: number;
+}
+
+export interface ExplorerTrends {
+  warmingRateDecade: number;
+  extremeHeatDaysTrend: string;
+  monsoonOnsetTrend: string;
+  annualRainfallAnomaly: number;
+  temperatureAnomalies: YearlyAnomaly[];
+  rainfallTrends: YearlyAnomaly[];
+}
+
+export type DisasterRiskDetailHazard = typeof DisasterRiskDetailHazard[keyof typeof DisasterRiskDetailHazard];
+
+
+export const DisasterRiskDetailHazard = {
+  flood: 'flood',
+  flash_flood: 'flash_flood',
+  cyclone: 'cyclone',
+  heatwave: 'heatwave',
+  cold_wave: 'cold_wave',
+  heavy_rainfall: 'heavy_rainfall',
+  cloudburst: 'cloudburst',
+  drought: 'drought',
+  landslide: 'landslide',
+  forest_fire: 'forest_fire',
+  lightning: 'lightning',
+  dust_storm: 'dust_storm',
+  coastal_surge: 'coastal_surge',
+} as const;
+
+export type DisasterRiskDetailRiskLevel = typeof DisasterRiskDetailRiskLevel[keyof typeof DisasterRiskDetailRiskLevel];
+
+
+export const DisasterRiskDetailRiskLevel = {
+  low: 'low',
+  moderate: 'moderate',
+  high: 'high',
+  severe: 'severe',
+} as const;
+
+export interface DisasterRiskDetail {
+  hazard: DisasterRiskDetailHazard;
+  riskLevel: DisasterRiskDetailRiskLevel;
+  probability: number;
+  expectedStart: string;
+  expectedDuration: string;
+  affectedAreas: string[];
+  severityScore: number;
+  confidenceScore: number;
+  precautions: string[];
+  /** @nullable */
+  governmentAdvisory?: string | null;
+}
+
+export interface ExplorerDisasterRisk {
+  activeAlerts: DisasterRiskDetail[];
+  historicalOccurrenceCount: number;
+}
+
+export interface MonthlyHistoricalData {
+  month: string;
+  year: number;
+  temperature: number;
+  rainfall: number;
+  humidity: number;
+  aqi: number;
+}
+
+export interface HistoricalDisaster {
+  year: number;
+  date: string;
+  type: string;
+  severity: string;
+  description: string;
+}
+
+export interface ExplorerHistorical {
+  yearsAvailable: number[];
+  monthlyAverages: MonthlyHistoricalData[];
+  previousDisasters: HistoricalDisaster[];
+}
+
+export interface ExplorerClimateData {
+  location: ExplorerLocation;
+  current: ExplorerCurrentClimate;
+  forecast: ExplorerForecast;
+  trends: ExplorerTrends;
+  disasterRisk: ExplorerDisasterRisk;
+  aiSummary: string;
+  historical: ExplorerHistorical;
+}
+
 export type GetMapLayersParams = {
 layer?: GetMapLayersLayer;
 };
@@ -568,5 +766,17 @@ deforestationPercent?: number;
 urbanExpansionPercent?: number;
 seaLevelRise?: number;
 carbonEmissionsChange?: number;
+};
+
+export type GetClimateExplorerDataParams = {
+state?: string;
+district?: string;
+city?: string;
+};
+
+export type GetClimateExplorerReportParams = {
+state?: string;
+district?: string;
+city?: string;
 };
 
