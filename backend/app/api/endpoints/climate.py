@@ -164,8 +164,8 @@ def call_gemini_api(prompt: str, context: str = "") -> Optional[str]:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
     
     system_instruction = (
-        "You are the ClimateTwin AI Advisor, a conversational assistant integrated directly into the ClimateTwin India command center. "
-        "Your role is to answer questions about the ClimateTwin platform (the simulator, clean energy hub, Krishi AI chatbot, and emergency shelter routing) "
+        "You are the IndiClima Twin AI Advisor, a conversational assistant integrated directly into the IndiClima Twin India command center. "
+        "Your role is to answer questions about the IndiClima Twin platform (the simulator, clean energy hub, Krishi AI chatbot, and emergency shelter routing) "
         "as well as general climate science, microclimates in India, meteorological terms, crop suitability, and green energy. "
         "Keep responses professional, concise (1-3 paragraphs), and format key parameters or instructions in markdown. "
         "If asked about platform capabilities, relate it to the 6 modules: Dashboard, Agriculture, Water, Energy, Analytics, and Simulator.\n\n"

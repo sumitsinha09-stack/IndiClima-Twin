@@ -60,7 +60,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/50">
             <div className="flex items-center gap-2 font-display font-bold text-lg tracking-wide text-primary">
               <BrainCircuit className="h-6 w-6" />
-              <span>ClimateTwin</span>
+              <span>IndiClima Twin</span>
             </div>
           </SidebarHeader>
           <SidebarContent>

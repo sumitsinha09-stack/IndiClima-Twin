@@ -14,7 +14,7 @@ logging.basicConfig(
 logger = logging.getLogger("api-server")
 
 app = FastAPI(
-    title="ClimateTwin India API",
+    title="IndiClima Twin India API",
     description="AI-Powered Digital Twin of India's Climate",
     version="0.1.0",
     docs_url="/docs",

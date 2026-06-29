@@ -10,7 +10,7 @@ export function GlobalChatbot() {
   const [history, setHistory] = useState<Array<{ sender: "user" | "bot"; text: string }>>([
     {
       sender: "bot",
-      text: "👋 Namaste! I am the ClimateTwin Advisor. Ask me how the Digital Twin works, details about simulator algorithms, renewable energy, or disaster logistics!"
+      text: "👋 Namaste! I am the IndiClima Twin Advisor. Ask me how the Digital Twin works, details about simulator algorithms, renewable energy, or disaster logistics!"
     }
   ]);
 
@@ -66,7 +66,7 @@ export function GlobalChatbot() {
             <div className="flex items-center gap-2">
               <BrainCircuit className="h-5 w-5 text-primary animate-pulse" />
               <div>
-                <CardTitle className="text-sm font-semibold text-foreground">ClimateTwin AI Advisor</CardTitle>
+                <CardTitle className="text-sm font-semibold text-foreground">IndiClima Twin AI Advisor</CardTitle>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">ISRO-Link Active</span>

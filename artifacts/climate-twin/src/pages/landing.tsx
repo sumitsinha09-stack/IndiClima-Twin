@@ -22,7 +22,7 @@ export default function Landing() {
       <header className="relative z-10 p-6 flex items-center justify-between border-b border-border/20 bg-background/50 backdrop-blur-md">
         <div className="flex items-center gap-2 font-display font-bold text-xl tracking-wider text-primary">
           <BrainCircuit className="h-6 w-6" />
-          <span>ClimateTwin</span>
+          <span>IndiClima Twin</span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground uppercase tracking-widest">
           <span className="flex items-center gap-2">
@@ -58,7 +58,7 @@ export default function Landing() {
           </div>
           
           <h1 className="font-display text-5xl sm:text-7xl font-bold tracking-tighter mb-6 neon-text">
-            ClimateTwin <span className="text-foreground">India</span>
+            IndiClima Twin <span className="text-foreground">India</span>
           </h1>
           
           <p className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mb-10 font-light leading-relaxed">

@@ -1,8 +1,8 @@
-# ClimateTwin India
+# IndiClima Twin India
 
 **AI-Powered Digital Twin of India's Climate**
 
-ClimateTwin India is a full-stack, real-time climate intelligence platform that creates a digital twin of India's climate. It simulates weather and climate patterns, predicts future scenarios using AI models, visualises data on interactive maps, and provides decision-support tools for policymakers, researchers, farmers, and disaster management authorities.
+IndiClima Twin India is a full-stack, real-time climate intelligence platform that creates a digital twin of India's climate. It simulates weather and climate patterns, predicts future scenarios using AI models, visualises data on interactive maps, and provides decision-support tools for policymakers, researchers, farmers, and disaster management authorities.
 
 ---
 

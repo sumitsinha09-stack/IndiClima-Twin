@@ -30,7 +30,7 @@ endpoints = [
     ("/agriculture/dashboard", "GET", None),
     ("/water/dashboard", "GET", None),
     ("/agriculture/chat", "POST", {"message": "How is the paddy crop doing?"}),
-    ("/climate/chat", "POST", {"message": "What is ClimateTwin?"}),
+    ("/climate/chat", "POST", {"message": "What is IndiClima Twin?"}),
     ("/energy/dashboard", "GET", None),
     ("/reports/download", "GET", None),
 ]

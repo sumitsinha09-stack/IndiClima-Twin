@@ -339,7 +339,7 @@ export default function ClimateExplorer() {
     const blob = new Blob([headers + rows], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", `ClimateTwin_Forecast_${selectedCity.replace(" ", "_")}.csv`);
+    link.setAttribute("download", `IndiClima_Twin_Forecast_${selectedCity.replace(" ", "_")}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

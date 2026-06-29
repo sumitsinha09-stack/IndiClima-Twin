@@ -20,7 +20,7 @@ export default function Agriculture() {
   const [chatHistory, setChatHistory] = useState<Array<{ sender: "user" | "bot"; text: string }>>([
     {
       sender: "bot",
-      text: "👋 Namaste! I am Krishi AI, your ClimateTwin Agricultural Advisor. Ask me anything about crop suitability, sowing cycles, or soil conditions!"
+      text: "👋 Namaste! I am Krishi AI, your IndiClima Twin Agricultural Advisor. Ask me anything about crop suitability, sowing cycles, or soil conditions!"
     }
   ]);
 
