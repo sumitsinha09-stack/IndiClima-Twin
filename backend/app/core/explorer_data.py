@@ -6,7 +6,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional
 
-# List of 35 major locations in India with geographical and climate baselines
+# List of 50 major locations in India with geographical and climate baselines representing all 28 states and 8 Union Territories
 LOCATIONS = [
     # North
     {"state": "Delhi", "district": "New Delhi", "city": "Delhi", "lat": 28.6139, "lng": 77.2090, "zone": "composite", "temp_base": 25.0, "rain_base": 600, "aqi_base": 190, "soil_base": 0.35, "elev": 216},
@@ -19,6 +19,7 @@ LOCATIONS = [
     {"state": "Uttar Pradesh", "district": "Lucknow", "city": "Lucknow", "lat": 26.8467, "lng": 80.9462, "zone": "subtropical", "temp_base": 25.5, "rain_base": 950, "aqi_base": 160, "soil_base": 0.50, "elev": 123},
     {"state": "Uttar Pradesh", "district": "Varanasi", "city": "Varanasi", "lat": 25.3176, "lng": 82.9739, "zone": "subtropical", "temp_base": 26.0, "rain_base": 1000, "aqi_base": 150, "soil_base": 0.52, "elev": 81},
     {"state": "Uttar Pradesh", "district": "Agra", "city": "Agra", "lat": 27.1767, "lng": 78.0081, "zone": "semi-arid", "temp_base": 25.8, "rain_base": 750, "aqi_base": 170, "soil_base": 0.38, "elev": 171},
+    {"state": "Haryana", "district": "Gurgaon", "city": "Gurugram", "lat": 28.4595, "lng": 77.0266, "zone": "semi-arid", "temp_base": 25.2, "rain_base": 550, "aqi_base": 195, "soil_base": 0.32, "elev": 219},
     
     # West
     {"state": "Maharashtra", "district": "Mumbai", "city": "Mumbai", "lat": 19.0760, "lng": 72.8777, "zone": "tropical-wet", "temp_base": 27.2, "rain_base": 2200, "aqi_base": 95, "soil_base": 0.55, "elev": 14},
@@ -40,16 +41,34 @@ LOCATIONS = [
     {"state": "Kerala", "district": "Trivandrum", "city": "Trivandrum", "lat": 8.5241, "lng": 76.9366, "zone": "tropical-wet", "temp_base": 27.0, "rain_base": 1800, "aqi_base": 48, "soil_base": 0.62, "elev": 5},
     {"state": "Kerala", "district": "Ernakulam", "city": "Kochi", "lat": 9.9312, "lng": 76.2673, "zone": "tropical-wet", "temp_base": 27.2, "rain_base": 3000, "aqi_base": 52, "soil_base": 0.65, "elev": 2},
     {"state": "Goa", "district": "North Goa", "city": "Panaji", "lat": 15.4909, "lng": 73.8278, "zone": "tropical-wet", "temp_base": 27.5, "rain_base": 2900, "aqi_base": 50, "soil_base": 0.58, "elev": 7},
+    {"state": "Andhra Pradesh", "district": "Visakhapatnam", "city": "Visakhapatnam", "lat": 17.6868, "lng": 83.2185, "zone": "tropical-wet", "temp_base": 27.5, "rain_base": 1000, "aqi_base": 80, "soil_base": 0.40, "elev": 45},
     
-    # East & Northeast
+    # East & Central
     {"state": "West Bengal", "district": "Kolkata", "city": "Kolkata", "lat": 22.5726, "lng": 88.3639, "zone": "tropical-wet", "temp_base": 26.8, "rain_base": 1600, "aqi_base": 135, "soil_base": 0.56, "elev": 9},
     {"state": "West Bengal", "district": "Darjeeling", "city": "Darjeeling", "lat": 27.0410, "lng": 88.2627, "zone": "temperate", "temp_base": 12.0, "rain_base": 3000, "aqi_base": 42, "soil_base": 0.70, "elev": 2042},
     {"state": "Bihar", "district": "Patna", "city": "Patna", "lat": 25.5941, "lng": 85.1376, "zone": "subtropical", "temp_base": 25.8, "rain_base": 1150, "aqi_base": 180, "soil_base": 0.52, "elev": 53},
     {"state": "Odisha", "district": "Khordha", "city": "Bhubaneswar", "lat": 20.2961, "lng": 85.8245, "zone": "tropical-wet", "temp_base": 27.0, "rain_base": 1450, "aqi_base": 90, "soil_base": 0.48, "elev": 45},
+    {"state": "Madhya Pradesh", "district": "Indore", "city": "Indore", "lat": 22.7196, "lng": 75.8577, "zone": "composite", "temp_base": 24.5, "rain_base": 900, "aqi_base": 110, "soil_base": 0.44, "elev": 553},
+    {"state": "Madhya Pradesh", "district": "Bhopal", "city": "Bhopal", "lat": 23.2599, "lng": 77.4126, "zone": "composite", "temp_base": 25.1, "rain_base": 1050, "aqi_base": 115, "soil_base": 0.45, "elev": 427},
+    {"state": "Chhattisgarh", "district": "Raipur", "city": "Raipur", "lat": 21.2514, "lng": 81.6296, "zone": "composite", "temp_base": 26.5, "rain_base": 1300, "aqi_base": 120, "soil_base": 0.42, "elev": 298},
+    {"state": "Jharkhand", "district": "Ranchi", "city": "Ranchi", "lat": 23.3441, "lng": 85.3096, "zone": "subtropical", "temp_base": 23.5, "rain_base": 1400, "aqi_base": 95, "soil_base": 0.48, "elev": 651},
+    
+    # Northeast
     {"state": "Assam", "district": "Kamrup", "city": "Guwahati", "lat": 26.1445, "lng": 91.7362, "zone": "subtropical-wet", "temp_base": 24.0, "rain_base": 1700, "aqi_base": 80, "soil_base": 0.60, "elev": 55},
     {"state": "Tripura", "district": "West Tripura", "city": "Agartala", "lat": 23.8315, "lng": 91.2868, "zone": "subtropical-wet", "temp_base": 25.0, "rain_base": 2200, "aqi_base": 70, "soil_base": 0.58, "elev": 15},
-    {"state": "Madhya Pradesh", "district": "Indore", "city": "Indore", "lat": 22.7196, "lng": 75.8577, "zone": "composite", "temp_base": 24.5, "rain_base": 900, "aqi_base": 110, "soil_base": 0.44, "elev": 553},
-    {"state": "Madhya Pradesh", "district": "Bhopal", "city": "Bhopal", "lat": 23.2599, "lng": 77.4126, "zone": "composite", "temp_base": 25.1, "rain_base": 1050, "aqi_base": 115, "soil_base": 0.45, "elev": 427}
+    {"state": "Arunachal Pradesh", "district": "Papum Pare", "city": "Itanagar", "lat": 27.0844, "lng": 93.6053, "zone": "subtropical-wet", "temp_base": 21.0, "rain_base": 2800, "aqi_base": 40, "soil_base": 0.65, "elev": 320},
+    {"state": "Manipur", "district": "Imphal West", "city": "Imphal", "lat": 24.8170, "lng": 93.9368, "zone": "subtropical-wet", "temp_base": 20.8, "rain_base": 1400, "aqi_base": 50, "soil_base": 0.60, "elev": 786},
+    {"state": "Meghalaya", "district": "East Khasi Hills", "city": "Shillong", "lat": 25.5788, "lng": 91.8933, "zone": "temperate", "temp_base": 17.0, "rain_base": 2400, "aqi_base": 35, "soil_base": 0.68, "elev": 1525},
+    {"state": "Mizoram", "district": "Aizawl", "city": "Aizawl", "lat": 23.7307, "lng": 92.7173, "zone": "subtropical-wet", "temp_base": 21.5, "rain_base": 2500, "aqi_base": 38, "soil_base": 0.62, "elev": 1132},
+    {"state": "Nagaland", "district": "Kohima", "city": "Kohima", "lat": 25.6751, "lng": 94.1086, "zone": "temperate", "temp_base": 18.5, "rain_base": 1800, "aqi_base": 42, "soil_base": 0.64, "elev": 1444},
+    {"state": "Sikkim", "district": "Gangtok", "city": "Gangtok", "lat": 27.3314, "lng": 88.6138, "zone": "temperate", "temp_base": 15.2, "rain_base": 3500, "aqi_base": 30, "soil_base": 0.72, "elev": 1650},
+    
+    # Islands & UTs
+    {"state": "Andaman and Nicobar Islands", "district": "South Andaman", "city": "Port Blair", "lat": 11.6234, "lng": 92.7265, "zone": "tropical-wet", "temp_base": 27.0, "rain_base": 3100, "aqi_base": 32, "soil_base": 0.65, "elev": 16},
+    {"state": "Dadra and Nagar Haveli and Daman and Diu", "district": "Daman", "city": "Daman", "lat": 20.3974, "lng": 72.8328, "zone": "tropical-wet", "temp_base": 27.2, "rain_base": 1600, "aqi_base": 95, "soil_base": 0.45, "elev": 5},
+    {"state": "Ladakh", "district": "Leh", "city": "Leh", "lat": 34.1526, "lng": 77.5771, "zone": "alpine", "temp_base": 6.5, "rain_base": 100, "aqi_base": 28, "soil_base": 0.08, "elev": 3500},
+    {"state": "Lakshadweep", "district": "Lakshadweep", "city": "Kavaratti", "lat": 10.5667, "lng": 72.6369, "zone": "tropical-wet", "temp_base": 28.0, "rain_base": 1600, "aqi_base": 35, "soil_base": 0.40, "elev": 2},
+    {"state": "Puducherry", "district": "Puducherry", "city": "Pondicherry", "lat": 11.9416, "lng": 79.8083, "zone": "tropical-wet", "temp_base": 28.2, "rain_base": 1300, "aqi_base": 75, "soil_base": 0.46, "elev": 3}
 ]
 
 def find_location(state: Optional[str] = None, district: Optional[str] = None, city: Optional[str] = None) -> Dict[str, Any]:
