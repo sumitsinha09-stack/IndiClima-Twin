@@ -105,8 +105,15 @@ const WEATHER_STYLES = `
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+.light .glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
 .neon-glow {
   text-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+}
+.light .neon-glow {
+  text-shadow: none;
 }
 `;
 
@@ -169,12 +176,12 @@ const AnimatedWeatherIllustration = ({ condition, className = "w-16 h-16" }: { c
 
 // Weather Condition Color Gradients map
 const THEME_GRADIENTS: Record<string, string> = {
-  sunny: "from-amber-950/20 via-slate-900/90 to-slate-950",
-  cloudy: "from-slate-800/20 via-slate-900/90 to-slate-950",
-  rain: "from-sky-950/30 via-slate-900/90 to-slate-950",
-  thunderstorm: "from-violet-950/30 via-slate-900/90 to-slate-950",
-  fog: "from-blue-950/20 via-slate-900/90 to-slate-950",
-  snow: "from-cyan-950/20 via-slate-900/90 to-slate-950"
+  sunny: "from-amber-100/40 dark:from-amber-950/20 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950",
+  cloudy: "from-slate-200/40 dark:from-slate-800/20 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950",
+  rain: "from-sky-200/50 dark:from-sky-950/30 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950",
+  thunderstorm: "from-violet-200/50 dark:from-violet-950/30 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950",
+  fog: "from-blue-200/30 dark:from-blue-950/20 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950",
+  snow: "from-cyan-200/30 dark:from-cyan-950/20 via-background/90 dark:via-slate-900/90 to-background dark:to-slate-950"
 };
 
 export default function ClimateExplorer() {
@@ -289,8 +296,8 @@ export default function ClimateExplorer() {
 
   // Dynamic weather-dependent background gradient
   const pageBgGradient = useMemo(() => {
-    if (!explorerData?.current?.condition) return "from-slate-900 via-slate-900 to-slate-950";
-    return THEME_GRADIENTS[explorerData.current.condition] || "from-slate-900 via-slate-900 to-slate-950";
+    if (!explorerData?.current?.condition) return "from-slate-100 via-background to-background dark:from-slate-900 dark:via-slate-900 dark:to-slate-950";
+    return THEME_GRADIENTS[explorerData.current.condition] || "from-slate-100 via-background to-background dark:from-slate-900 dark:via-slate-900 dark:to-slate-950";
   }, [explorerData]);
 
   // Handler to select location from autocomplete search
@@ -518,12 +525,12 @@ export default function ClimateExplorer() {
                     setShowDropdown(true);
                   }}
                   onFocus={() => setShowDropdown(true)}
-                  className="block w-full pl-10 pr-4 py-2 text-sm bg-slate-900/60 border border-white/10 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground"
+                  className="block w-full pl-10 pr-4 py-2 text-sm bg-muted/40 border border-border/80 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground"
                 />
                 
                 {/* Search Autocomplete Dropdown list */}
                 {showDropdown && searchQuery && (
-                  <div className="absolute z-50 w-full mt-1.5 bg-slate-950 border border-white/10 rounded-md shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
+                  <div className="absolute z-50 w-full mt-1.5 bg-popover border border-border rounded-md shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
                     {filteredSearchList.length === 0 ? (
                       <div className="py-2.5 px-4 text-xs text-muted-foreground">No matching locations found</div>
                     ) : (
@@ -531,7 +538,7 @@ export default function ClimateExplorer() {
                         <div
                           key={i}
                           onClick={() => handleSelectLocation(loc)}
-                          className="py-2 px-4 text-sm hover:bg-white/5 cursor-pointer flex items-center justify-between border-b border-white/5"
+                          className="py-2 px-4 text-sm hover:bg-accent/40 cursor-pointer flex items-center justify-between border-b border-border/30"
                         >
                           <div className="flex items-center gap-2">
                             <MapPin className="w-3.5 h-3.5 text-primary" />
@@ -557,7 +564,7 @@ export default function ClimateExplorer() {
                       setSelectedCity(match.city);
                     }
                   }}>
-                    <SelectTrigger className="bg-slate-900/40 border-white/10">
+                    <SelectTrigger className="bg-muted/30 border-border/60">
                       <SelectValue placeholder="Select State" />
                     </SelectTrigger>
                     <SelectContent>
@@ -573,7 +580,7 @@ export default function ClimateExplorer() {
                     const match = locations.find(l => l.state === selectedState && l.district === val);
                     if (match) setSelectedCity(match.city);
                   }}>
-                    <SelectTrigger className="bg-slate-900/40 border-white/10">
+                    <SelectTrigger className="bg-muted/30 border-border/60">
                       <SelectValue placeholder="Select District" />
                     </SelectTrigger>
                     <SelectContent>
@@ -585,7 +592,7 @@ export default function ClimateExplorer() {
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground">City</label>
                   <Select value={selectedCity} onValueChange={setSelectedCity}>
-                    <SelectTrigger className="bg-slate-900/40 border-white/10">
+                    <SelectTrigger className="bg-muted/30 border-border/60">
                       <SelectValue placeholder="Select City" />
                     </SelectTrigger>
                     <SelectContent>
@@ -841,14 +848,14 @@ export default function ClimateExplorer() {
                   </div>
                 </CardContent>
 
-                <div className="bg-slate-900/60 p-4 border-t border-white/5 grid grid-cols-2 gap-4 text-xs font-mono text-center shrink-0">
+                <div className="bg-muted/30 p-4 border-t border-border/40 grid grid-cols-2 gap-4 text-xs font-mono text-center shrink-0">
                   <div>
                     <span className="block text-muted-foreground text-[10px] uppercase">Sunrise</span>
-                    <span className="font-bold text-slate-200">{explorerData.current.sunrise} AM</span>
+                    <span className="font-bold text-foreground">{explorerData.current.sunrise} AM</span>
                   </div>
                   <div>
                     <span className="block text-muted-foreground text-[10px] uppercase">Sunset</span>
-                    <span className="font-bold text-slate-200">{explorerData.current.sunset} PM</span>
+                    <span className="font-bold text-foreground">{explorerData.current.sunset} PM</span>
                   </div>
                 </div>
               </Card>
@@ -858,13 +865,13 @@ export default function ClimateExplorer() {
             <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               
               {/* Temp Min/Max */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Temp Range</span>
                   <Thermometer className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.minTemp}&deg;C / {explorerData.current.maxTemp}&deg;C
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">Daily Minimum / Maximum</p>
@@ -872,28 +879,28 @@ export default function ClimateExplorer() {
               </Card>
 
               {/* Humidity */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Humidity</span>
                   <Droplets className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.humidity}%
                   </div>
-                  <Progress value={explorerData.current.humidity} className="h-1 bg-white/5" />
+                  <Progress value={explorerData.current.humidity} className="h-1 bg-muted/40 dark:bg-white/5" />
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">Relative Moisture Index</p>
                 </CardContent>
               </Card>
 
               {/* Precipitation */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Precipitation</span>
                   <CloudRain className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.rainfall.toFixed(1)} mm
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">Past 24 Hours Cumulative</p>
@@ -901,13 +908,13 @@ export default function ClimateExplorer() {
               </Card>
 
               {/* Wind Flow */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Wind Velocity</span>
                   <Wind className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.windSpeed} <span className="text-xs font-normal">km/h</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">
@@ -917,31 +924,31 @@ export default function ClimateExplorer() {
               </Card>
 
               {/* AQI Indicator */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">AQI Level</span>
                   <Activity className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.aqi}
                   </div>
                   <Progress
                     value={Math.min(100, (explorerData.current.aqi / 300) * 100)}
-                    className={`h-1 bg-white/5 [&>div]:bg-sky-400`}
+                    className={`h-1 bg-muted/40 dark:bg-white/5 [&>div]:bg-sky-400`}
                   />
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">CPCB Air Quality Standard</p>
                 </CardContent>
               </Card>
 
               {/* UV Index */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">UV Intensity</span>
                   <Sun className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.uvIndex} <span className="text-xs font-normal">/ 11</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">Solar Radiation Risk Index</p>
@@ -949,29 +956,29 @@ export default function ClimateExplorer() {
               </Card>
 
               {/* Pressure & Visibility */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Atmosphere</span>
                   <Compass className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-sm font-bold font-display text-slate-200">
+                  <div className="text-sm font-bold font-display text-foreground">
                     Baro: {explorerData.current.airPressure} hPa
                   </div>
-                  <div className="text-sm font-bold font-display text-slate-200 mt-1">
+                  <div className="text-sm font-bold font-display text-foreground mt-1">
                     Vis: {explorerData.current.visibility} km
                   </div>
                 </CardContent>
               </Card>
 
               {/* Soil Moisture */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Soil Moisture</span>
                   <Layers className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.soilMoisture !== null ? `${(explorerData.current.soilMoisture * 100).toFixed(0)}%` : "N/A"}
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">
@@ -981,13 +988,13 @@ export default function ClimateExplorer() {
               </Card>
 
               {/* Heat Index */}
-              <Card className="bg-slate-900/20 border-white/5 hover:border-primary/20 transition-all duration-200">
+              <Card className="bg-muted/15 dark:bg-slate-900/20 border-border/40 hover:border-primary/20 transition-all duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 shrink-0">
                   <span className="text-xs font-mono uppercase text-muted-foreground">Heat Index</span>
                   <Thermometer className="h-4 w-4 text-sky-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xl font-bold font-display text-slate-200">
+                  <div className="text-xl font-bold font-display text-foreground">
                     {explorerData.current.heatIndex.toFixed(1)}&deg;C
                   </div>
                   <p className="text-[10px] text-muted-foreground font-mono mt-1">Ambient thermal discomfort assessment</p>
@@ -1241,7 +1248,7 @@ export default function ClimateExplorer() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {explorerData.disasterRisk.activeAlerts.map((alert, i) => (
-                    <Card key={i} className="bg-slate-950/40 border border-white/5 flex flex-col justify-between overflow-hidden">
+                    <Card key={i} className="bg-muted/30 dark:bg-slate-950/40 border border-border/40 flex flex-col justify-between overflow-hidden">
                       <div className={`h-1 w-full ${
                         alert.riskLevel === 'severe' ? 'bg-red-500' :
                         alert.riskLevel === 'high' ? 'bg-orange-500' :
@@ -1249,7 +1256,7 @@ export default function ClimateExplorer() {
                       }`} />
                       <CardHeader className="p-4 pb-2">
                         <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-bold text-sm text-slate-200 capitalize">
+                          <h4 className="font-bold text-sm text-foreground capitalize">
                             {alert.hazard.replace("_", " ")} Risk
                           </h4>
                           <Badge variant="outline" className={`text-[9px] font-mono capitalize ${
@@ -1311,7 +1318,7 @@ export default function ClimateExplorer() {
                 </CardDescription>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 bg-slate-950/60 py-1 px-3.5 rounded border border-white/10 text-xs">
+                <div className="flex items-center gap-2 bg-muted/60 dark:bg-slate-950/60 py-1 px-3.5 rounded border border-border/60 text-xs">
                   <span className="text-[10px] text-muted-foreground font-mono uppercase">Left Layer</span>
                   <Select value={gisLayer1} onValueChange={setGisLayer1}>
                     <SelectTrigger className="w-[120px] bg-transparent border-0 h-6 p-0 text-primary text-xs focus:ring-0">
@@ -1326,7 +1333,7 @@ export default function ClimateExplorer() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-950/60 py-1 px-3.5 rounded border border-white/10 text-xs">
+                <div className="flex items-center gap-2 bg-muted/60 dark:bg-slate-950/60 py-1 px-3.5 rounded border border-border/60 text-xs">
                   <span className="text-[10px] text-muted-foreground font-mono uppercase">Right Layer</span>
                   <Select value={gisLayer2} onValueChange={setGisLayer2}>
                     <SelectTrigger className="w-[120px] bg-transparent border-0 h-6 p-0 text-indigo-400 text-xs focus:ring-0">
@@ -1345,7 +1352,7 @@ export default function ClimateExplorer() {
                   size="icon"
                   variant="ghost"
                   onClick={() => setIsFullscreenGis(!isFullscreenGis)}
-                  className="w-8 h-8 hover:bg-white/5 border border-white/10"
+                  className="w-8 h-8 hover:bg-accent/40 border border-border/60"
                 >
                   {isFullscreenGis ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                 </Button>
@@ -1356,7 +1363,7 @@ export default function ClimateExplorer() {
               {/* Comparator slider wrapper container */}
               <div
                 ref={sliderRef}
-                className={`relative w-full overflow-hidden select-none bg-slate-950/40 border-t border-white/5 flex items-center justify-center transition-all ${
+                className={`relative w-full overflow-hidden select-none bg-muted/30 dark:bg-slate-950/40 border-t border-border/40 flex items-center justify-center transition-all ${
                   isFullscreenGis ? 'h-[500px]' : 'h-[320px]'
                 }`}
                 onMouseMove={(e) => { if (isDragging) handleSliderMove(e.clientX); }}
@@ -1447,7 +1454,7 @@ export default function ClimateExplorer() {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="temperature">
-                <TabsList className="bg-slate-950 border border-white/10 mb-4">
+                <TabsList className="bg-muted dark:bg-slate-950 border border-border/60 mb-4">
                   <TabsTrigger value="temperature" className="text-xs">Monthly Temperature</TabsTrigger>
                   <TabsTrigger value="rainfall" className="text-xs">Monthly Rainfall</TabsTrigger>
                 </TabsList>
@@ -1528,7 +1535,7 @@ export default function ClimateExplorer() {
       {compareMode && (
         <Card className="glass-card border-indigo-500/20 relative p-6 mt-8 overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.1)_0,transparent_60%)] pointer-events-none" />
-          <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/5">
+          <div className="flex items-center justify-between mb-6 pb-3 border-b border-border/40">
             <h3 className="text-lg font-bold text-indigo-400 flex items-center gap-2">
               <Columns className="w-5 h-5" />
               Side-by-Side Regional Comparison
@@ -1536,7 +1543,7 @@ export default function ClimateExplorer() {
             <div className="flex items-center gap-4">
               <span className="text-xs text-muted-foreground font-mono uppercase">Compare {selectedCity} vs:</span>
               <Select value={compCity} onValueChange={setCompCity}>
-                <SelectTrigger className="w-[180px] bg-slate-950 border-white/10 text-indigo-400">
+                <SelectTrigger className="w-[180px] bg-muted dark:bg-slate-950 border-border/60 text-indigo-400">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
